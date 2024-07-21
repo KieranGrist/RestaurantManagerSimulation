@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "FastFoodRestarauntBaseGameMode.generated.h"
+#include "FastFoodRestarauntGameModeBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API AFastFoodRestarauntBaseGameMode : public AGameModeBase
+class FASTFOODRESTARAUNT_API AFastFoodRestarauntGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	

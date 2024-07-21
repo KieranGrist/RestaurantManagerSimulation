@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Objects/BaseInteractableObject.h"
-#include "BaseKitchenEquipment.generated.h"
+#include "Objects/InteractableObjectBase.h"
+#include "KitchenEquipmentBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API ABaseKitchenEquipment : public ABaseInteractableObject
+class FASTFOODRESTARAUNT_API AKitchenEquipmentBase : public AInteractableObjectBase
 {
 	GENERATED_BODY()
 	

@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "BaseInteractableObject.generated.h"
+#include "InteractableObjectBase.generated.h"
 
 UCLASS()
-class FASTFOODRESTARAUNT_API ABaseInteractableObject : public AActor
+class FASTFOODRESTARAUNT_API AInteractableObjectBase : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABaseInteractableObject();
+	AInteractableObjectBase();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Objects/Furniture/BaseFurniture.h"
+#include "Objects/Furniture/FurnitureBase.h"
 #include "Table.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API ATable : public ABaseFurniture
+class FASTFOODRESTARAUNT_API ATable : public AFurnitureBase
 {
 	GENERATED_BODY()
 	

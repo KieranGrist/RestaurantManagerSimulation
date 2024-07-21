@@ -3,20 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Objects/BaseInteractableObject.h"
-#include "BaseFurniture.generated.h"
+#include "Objects/InteractableObjectBase.h"
+#include "FurnitureBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API ABaseFurniture : public ABaseInteractableObject
+class FASTFOODRESTARAUNT_API AFurnitureBase : public AInteractableObjectBase
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	ABaseFurniture();
+	AFurnitureBase();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

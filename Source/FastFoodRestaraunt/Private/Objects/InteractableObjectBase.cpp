@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Objects/BaseInteractableObject.h"
+#include "Objects/InteractableObjectBase.h"
 
 // Sets default values
-ABaseInteractableObject::ABaseInteractableObject()
+AInteractableObjectBase::AInteractableObjectBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -12,14 +12,14 @@ ABaseInteractableObject::ABaseInteractableObject()
 }
 
 // Called when the game starts or when spawned
-void ABaseInteractableObject::BeginPlay()
+void AInteractableObjectBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ABaseInteractableObject::Tick(float DeltaTime)
+void AInteractableObjectBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

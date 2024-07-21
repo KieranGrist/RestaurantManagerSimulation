@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Objects/Furniture/BaseFurniture.h"
+#include "Objects/Furniture/FurnitureBase.h"
 
-ABaseFurniture::ABaseFurniture()
+AFurnitureBase::AFurnitureBase()
 {
 }
 
-void ABaseFurniture::BeginPlay()
+void AFurnitureBase::BeginPlay()
 {
 }
 
-void ABaseFurniture::Tick(float DeltaTime)
+void AFurnitureBase::Tick(float DeltaTime)
 {
 }

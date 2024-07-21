@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "BaseArchitecturalElement.generated.h"
+#include "ArchitecturalBase.generated.h"
 
 UCLASS()
-class FASTFOODRESTARAUNT_API ABaseArchitecturalElement : public AActor
+class FASTFOODRESTARAUNT_API AArchitecturalBase : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABaseArchitecturalElement();
+	AArchitecturalBase();
 
 protected:
 	// Called when the game starts or when spawned
