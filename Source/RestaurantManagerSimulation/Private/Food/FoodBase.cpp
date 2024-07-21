@@ -3,3 +3,24 @@
 
 #include "Food/FoodBase.h"
 
+// Sets default values
+AFoodBase::AFoodBase()
+{
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+}
+
+// Called when the game starts or when spawned
+void AFoodBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+}
+
+// Called every frame
+void AFoodBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}

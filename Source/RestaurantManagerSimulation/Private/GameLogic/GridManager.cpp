@@ -3,3 +3,7 @@
 
 #include "GameLogic/GridManager.h"
 
+UGridManager::UGridManager()
+{
+
+}

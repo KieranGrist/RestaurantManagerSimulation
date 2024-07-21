@@ -3,3 +3,25 @@
 
 #include "Objects/Kitchen/FoodPrep/ChoppingBoard.h"
 
+// Sets default values
+AChoppingBoard::AChoppingBoard()
+{
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+}
+
+// Called when the game starts or when spawned
+void AChoppingBoard::BeginPlay()
+{
+	Super::BeginPlay();
+
+}
+
+// Called every frame
+void AChoppingBoard::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+

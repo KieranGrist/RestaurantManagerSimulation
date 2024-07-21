@@ -1,21 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Objects/Furniture/Table.h"
+#include "Objects/Restaurant/Furniture/TableBase.h"
 
-ATable::ATable()
+ATableBase::ATableBase()
 {
 }
 
 // Called when the game starts or when spawned
-void ATable::BeginPlay()
+void ATableBase::BeginPlay()
 {
 	Super::BeginPlay();
 
 }
 
 // Called every frame
-void ATable::Tick(float DeltaTime)
+void ATableBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

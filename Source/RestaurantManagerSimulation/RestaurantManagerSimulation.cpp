@@ -3,4 +3,4 @@
 #include "RestaurantManagerSimulation.h"
 #include "Modules/ModuleManager.h"
 
-IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, RestaurantManagerSimulation, "RestaurantManagerSimulation" );
+IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, RestaurantManagerSimulation, "RestaurantManagerSimulation");

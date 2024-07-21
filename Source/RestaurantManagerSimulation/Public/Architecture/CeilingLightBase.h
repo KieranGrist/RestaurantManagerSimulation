@@ -4,14 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Architecture/ArchitecturalBase.h"
-#include "CeilingBase.generated.h"
+#include "CeilingLightBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RESTAURANTMANAGERSIMULATION_API  ACeilingBase : public AArchitecturalBase
+class RESTAURANTMANAGERSIMULATION_API  ACeilingLightBase : public AArchitecturalBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	// Sets default values for this actor's properties
+	ACeilingLightBase();
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 };

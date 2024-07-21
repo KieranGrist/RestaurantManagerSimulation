@@ -3,3 +3,25 @@
 
 #include "Objects/Kitchen/Storage/FoodStorageContainerBase.h"
 
+// Sets default values
+AFoodStorageContainerBase::AFoodStorageContainerBase()
+{
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+}
+
+// Called when the game starts or when spawned
+void AFoodStorageContainerBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+}
+
+// Called every frame
+void AFoodStorageContainerBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+

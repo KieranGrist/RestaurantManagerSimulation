@@ -3,20 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Objects/Restaurant/RestaurantEquipmentBase.h"
-#include "PointOfSaleBase.generated.h"
+#include "Objects/Kitchen/KitchenEquipmentBase.h"
+#include "MicrowaveBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RESTAURANTMANAGERSIMULATION_API  APointOfSaleBase : public ARestaurantEquipmentBase
+class RESTAURANTMANAGERSIMULATION_API  AMicrowaveBase : public AKitchenEquipmentBase
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	APointOfSaleBase();
+	AMicrowaveBase();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

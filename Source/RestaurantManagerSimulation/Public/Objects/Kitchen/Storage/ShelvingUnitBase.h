@@ -4,14 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Objects/Kitchen/KitchenEquipmentBase.h"
-#include "ShelvingUnit.generated.h"
+#include "ShelvingUnitBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RESTAURANTMANAGERSIMULATION_API  AShelvingUnit : public AKitchenEquipmentBase
+class RESTAURANTMANAGERSIMULATION_API  AShelvingUnitBase : public AKitchenEquipmentBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	// Sets default values for this actor's properties
+	AShelvingUnitBase();
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 };

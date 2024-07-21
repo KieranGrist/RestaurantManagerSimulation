@@ -3,20 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Objects/Furniture/FurnitureBase.h"
-#include "Table.generated.h"
+#include "Objects/Restaurant/Furniture/FurnitureBase.h"
+#include "TableBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RESTAURANTMANAGERSIMULATION_API  ATable : public AFurnitureBase
+class RESTAURANTMANAGERSIMULATION_API  ATableBase : public AFurnitureBase
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	ATable();
+	ATableBase();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

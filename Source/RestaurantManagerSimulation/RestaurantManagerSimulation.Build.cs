@@ -4,20 +4,33 @@ using UnrealBuildTool;
 
 public class RestaurantManagerSimulation : ModuleRules
 {
-	public RestaurantManagerSimulation(ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
+    public RestaurantManagerSimulation(ReadOnlyTargetRules Target) : base(Target)
+    {
+        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+        // List public dependencies that other modules or projects might need
+        PublicDependencyModuleNames.AddRange(new string[]
+        {
+            "Core",         // Core functionality
+			"CoreUObject",  // Object handling
+			"Engine",       // Main engine functionalities
+			"InputCore",    // Input handling
+			"EnhancedInput" // Enhanced input system (if used)
+		});
 
-		// Uncomment if you are using Slate UI
-		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
-		
-		// Uncomment if you are using online features
-		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
+        // List private dependencies specific to this module
+        PrivateDependencyModuleNames.AddRange(new string[]
+        { 
+			// Add private dependencies here if any
+		});
 
-		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
-	}
+        // Uncomment and add dependencies for Slate UI if using Slate UI framework
+        // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
+
+        // Uncomment and add dependencies for online features if used
+        // PrivateDependencyModuleNames.Add("OnlineSubsystem");
+
+        // For OnlineSubsystemSteam, ensure it's enabled in the .uproject file
+        // and also add the plugin section to the .uproject file with the Enabled attribute set to true
+    }
 }

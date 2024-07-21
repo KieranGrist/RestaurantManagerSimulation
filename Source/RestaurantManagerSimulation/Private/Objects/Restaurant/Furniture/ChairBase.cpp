@@ -1,21 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Objects/Furniture/Chair.h"
+#include "Objects/Restaurant/Furniture/ChairBase.h"
 
-AChair::AChair()
+AChairBase::AChairBase()
 {
 }
 
 // Called when the game starts or when spawned
-void AChair::BeginPlay()
+void AChairBase::BeginPlay()
 {
 	Super::BeginPlay();
 
 }
 
 // Called every frame
-void AChair::Tick(float DeltaTime)
+void AChairBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

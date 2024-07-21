@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Objects/Kitchen/FoodPrep/SlicerBase.h"
+#include "Objects/Kitchen/CookingEquipment/ToasterBase.h"
 
 // Sets default values
-ASlicerBase::ASlicerBase()
+AToasterBase::AToasterBase()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -12,14 +12,14 @@ ASlicerBase::ASlicerBase()
 }
 
 // Called when the game starts or when spawned
-void ASlicerBase::BeginPlay()
+void AToasterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
 }
 
 // Called every frame
-void ASlicerBase::Tick(float DeltaTime)
+void AToasterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 

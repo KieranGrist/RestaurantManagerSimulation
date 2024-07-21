@@ -4,14 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Objects/Kitchen/KitchenEquipmentBase.h"
-#include "DeepFryer.generated.h"
+#include "DeepFryerBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RESTAURANTMANAGERSIMULATION_API  ADeepFryer : public AKitchenEquipmentBase
+class RESTAURANTMANAGERSIMULATION_API  ADeepFryerBase : public AKitchenEquipmentBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	// Sets default values for this actor's properties
+	ADeepFryerBase();
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 };

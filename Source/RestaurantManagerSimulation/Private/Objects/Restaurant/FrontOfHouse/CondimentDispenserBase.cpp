@@ -3,3 +3,25 @@
 
 #include "Objects/Restaurant/FrontOfHouse/CondimentDispenserBase.h"
 
+// Sets default values
+ACondimentDispenserBase::ACondimentDispenserBase()
+{
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+}
+
+// Called when the game starts or when spawned
+void ACondimentDispenserBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+}
+
+// Called every frame
+void ACondimentDispenserBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+

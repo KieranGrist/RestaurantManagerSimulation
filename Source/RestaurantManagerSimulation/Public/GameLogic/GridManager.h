@@ -14,4 +14,6 @@ class RESTAURANTMANAGERSIMULATION_API  UGridManager : public UObject
 {
 	GENERATED_BODY()
 	
+public:
+	UGridManager();
 };

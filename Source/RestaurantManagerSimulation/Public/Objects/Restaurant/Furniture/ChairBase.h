@@ -3,20 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
-#include "FastFoodRestarauntGameModeBase.generated.h"
+#include "Objects/Restaurant/Furniture/FurnitureBase.h"
+#include "ChairBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RESTAURANTMANAGERSIMULATION_API  AFastFoodRestarauntGameModeBase : public AGameModeBase
+class RESTAURANTMANAGERSIMULATION_API  AChairBase : public AFurnitureBase
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	AFastFoodRestarauntGameModeBase();
+	AChairBase();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

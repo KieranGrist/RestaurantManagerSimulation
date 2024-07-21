@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Objects/Furniture/FurnitureBase.h"
+#include "Objects/Restaurant/Furniture/FurnitureBase.h"
 
 AFurnitureBase::AFurnitureBase()
 {
