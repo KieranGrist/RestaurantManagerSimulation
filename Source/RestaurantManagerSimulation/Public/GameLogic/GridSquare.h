@@ -7,7 +7,7 @@
 #include "GridSquare.generated.h"
 
 UCLASS()
-class FASTFOODRESTARAUNT_API AGridSquare : public AActor
+class RESTAURANTMANAGERSIMULATION_API  AGridSquare : public AActor
 {
 	GENERATED_BODY()
 	

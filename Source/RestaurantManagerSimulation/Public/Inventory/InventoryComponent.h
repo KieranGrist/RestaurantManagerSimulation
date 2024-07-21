@@ -8,7 +8,7 @@
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class FASTFOODRESTARAUNT_API UInventoryComponent : public UActorComponent
+class RESTAURANTMANAGERSIMULATION_API  UInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
 

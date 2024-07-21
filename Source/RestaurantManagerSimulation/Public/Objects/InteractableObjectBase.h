@@ -7,7 +7,7 @@
 #include "InteractableObjectBase.generated.h"
 
 UCLASS()
-class FASTFOODRESTARAUNT_API AInteractableObjectBase : public AActor
+class RESTAURANTMANAGERSIMULATION_API  AInteractableObjectBase : public AActor
 {
 	GENERATED_BODY()
 	

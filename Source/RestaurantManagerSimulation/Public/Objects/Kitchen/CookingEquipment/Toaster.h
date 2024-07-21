@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API AToaster : public AKitchenEquipmentBase
+class RESTAURANTMANAGERSIMULATION_API  AToaster : public AKitchenEquipmentBase
 {
 	GENERATED_BODY()
 	

@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API AWallBase : public AArchitecturalBase
+class RESTAURANTMANAGERSIMULATION_API  AWallBase : public AArchitecturalBase
 {
 	GENERATED_BODY()
 	

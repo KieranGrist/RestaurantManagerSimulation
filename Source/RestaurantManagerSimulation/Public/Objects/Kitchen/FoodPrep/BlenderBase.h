@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Objects/Kitchen/KitchenEquipmentBase.h"
-#include "FreezerBase.generated.h"
+#include "BlenderBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API AFreezerBase : public AKitchenEquipmentBase
+class RESTAURANTMANAGERSIMULATION_API  ABlenderBase : public AKitchenEquipmentBase
 {
 	GENERATED_BODY()
 	

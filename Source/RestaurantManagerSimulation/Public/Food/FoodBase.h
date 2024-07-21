@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API AFoodBase : public AInteractableObjectBase
+class RESTAURANTMANAGERSIMULATION_API  AFoodBase : public AInteractableObjectBase
 {
 	GENERATED_BODY()
 	

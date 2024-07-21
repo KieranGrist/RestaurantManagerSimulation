@@ -3,13 +3,13 @@
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class FastFoodRestarauntTarget : TargetRules
+public class RestaurantManagerSimulationTarget : TargetRules
 {
-	public FastFoodRestarauntTarget(TargetInfo Target) : base(Target)
+	public RestaurantManagerSimulationTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V5;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_4;
-		ExtraModuleNames.Add("FastFoodRestaraunt");
+		ExtraModuleNames.Add("RestaurantManagerSimulation");
 	}
 }

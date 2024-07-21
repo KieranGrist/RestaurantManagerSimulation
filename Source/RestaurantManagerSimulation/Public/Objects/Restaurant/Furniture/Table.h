@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API ATable : public AFurnitureBase
+class RESTAURANTMANAGERSIMULATION_API  ATable : public AFurnitureBase
 {
 	GENERATED_BODY()
 

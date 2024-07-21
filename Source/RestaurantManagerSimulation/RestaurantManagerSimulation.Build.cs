@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class FastFoodRestaraunt : ModuleRules
+public class RestaurantManagerSimulation : ModuleRules
 {
-	public FastFoodRestaraunt(ReadOnlyTargetRules Target) : base(Target)
+	public RestaurantManagerSimulation(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	

@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API AFoodProcessorBase : public AKitchenEquipmentBase
+class RESTAURANTMANAGERSIMULATION_API  AFoodProcessorBase : public AKitchenEquipmentBase
 {
 	GENERATED_BODY()
 	
