@@ -7,10 +7,16 @@ AFurnitureBase::AFurnitureBase()
 {
 }
 
+// Called when the game starts or when spawned
 void AFurnitureBase::BeginPlay()
 {
+	Super::BeginPlay();
+
 }
 
+// Called every frame
 void AFurnitureBase::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
+
 }

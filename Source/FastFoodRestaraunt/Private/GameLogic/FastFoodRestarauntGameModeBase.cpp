@@ -3,3 +3,14 @@
 
 #include "GameLogic/FastFoodRestarauntGameModeBase.h"
 
+AFastFoodRestarauntGameModeBase::AFastFoodRestarauntGameModeBase()
+{
+}
+
+void AFastFoodRestarauntGameModeBase::BeginPlay()
+{
+}
+
+void AFastFoodRestarauntGameModeBase::Tick(float DeltaTime)
+{
+}
