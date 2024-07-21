@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API AChair : public AFurnitureBase
+class RESTAURANTMANAGERSIMULATION_API  AChair : public AFurnitureBase
 {
 	GENERATED_BODY()
 

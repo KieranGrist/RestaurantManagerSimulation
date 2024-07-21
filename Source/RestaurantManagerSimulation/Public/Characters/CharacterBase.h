@@ -7,7 +7,7 @@
 #include "CharacterBase.generated.h"
 
 UCLASS()
-class FASTFOODRESTARAUNT_API ACharacterBase : public ACharacter
+class RESTAURANTMANAGERSIMULATION_API  ACharacterBase : public ACharacter
 {
 	GENERATED_BODY()
 

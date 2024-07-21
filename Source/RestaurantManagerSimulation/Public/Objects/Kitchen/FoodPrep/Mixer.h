@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Objects/Kitchen/KitchenEquipmentBase.h"
-#include "DeepFryer.generated.h"
+#include "Mixer.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API ADeepFryer : public AKitchenEquipmentBase
+class RESTAURANTMANAGERSIMULATION_API  AMixer : public AKitchenEquipmentBase
 {
 	GENERATED_BODY()
 	

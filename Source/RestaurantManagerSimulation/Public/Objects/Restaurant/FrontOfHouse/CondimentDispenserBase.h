@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API ACondimentDispenserBase : public ARestaurantEquipmentBase
+class RESTAURANTMANAGERSIMULATION_API  ACondimentDispenserBase : public ARestaurantEquipmentBase
 {
 	GENERATED_BODY()
 	

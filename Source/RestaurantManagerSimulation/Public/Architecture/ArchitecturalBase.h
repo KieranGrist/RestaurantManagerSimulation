@@ -7,7 +7,7 @@
 #include "ArchitecturalBase.generated.h"
 
 UCLASS()
-class FASTFOODRESTARAUNT_API AArchitecturalBase : public AActor
+class RESTAURANTMANAGERSIMULATION_API  AArchitecturalBase : public AActor
 {
 	GENERATED_BODY()
 	

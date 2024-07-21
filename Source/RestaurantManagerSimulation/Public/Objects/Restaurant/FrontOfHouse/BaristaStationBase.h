@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API ABarostaStationBase : public ARestaurantEquipmentBase
+class RESTAURANTMANAGERSIMULATION_API  ABarostaStationBase : public ARestaurantEquipmentBase
 {
 	GENERATED_BODY()
 	

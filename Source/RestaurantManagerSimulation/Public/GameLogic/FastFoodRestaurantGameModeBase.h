@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API AFastFoodRestarauntGameModeBase : public AGameModeBase
+class RESTAURANTMANAGERSIMULATION_API  AFastFoodRestarauntGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 

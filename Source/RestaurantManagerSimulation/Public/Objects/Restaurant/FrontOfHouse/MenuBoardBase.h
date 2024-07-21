@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API AMenuBoardBase : public ARestaurantEquipmentBase
+class RESTAURANTMANAGERSIMULATION_API  AMenuBoardBase : public ARestaurantEquipmentBase
 {
 	GENERATED_BODY()
 	

@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class FASTFOODRESTARAUNT_API UGridManager : public UObject
+class RESTAURANTMANAGERSIMULATION_API  UGridManager : public UObject
 {
 	GENERATED_BODY()
 	
