@@ -87,8 +87,10 @@ public:
 
 	AGridSquare* CreateGridSquare();
 
+	UFUNCTION(CallInEditor)
 	void StartEditMode();
 
+	UFUNCTION(CallInEditor)
 	void StopEditMode();
 
 	UPROPERTY(BlueprintAssignable)

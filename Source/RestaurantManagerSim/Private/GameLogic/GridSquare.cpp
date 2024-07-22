@@ -5,31 +5,38 @@
 // Sets default values
 AGridSquare::AGridSquare()
 {
-    // Set this actor to call Tick() every frame. You can turn this off to improve performance if you don't need it.
-    PrimaryActorTick.bCanEverTick = false;
+	// Set this actor to call Tick() every frame. You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = false;
 
-    // Create the GridCollision component and attach it to the root
-    GridCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("GridCollision"));
-    RootComponent = GridCollision;
+	// Create the GridCollision component and attach it to the root
+	GridSquareMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GridSquareMesh"));
+	RootComponent = GridSquareMesh;
 
-    // Set default box extent (size)
-    GridCollision->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
+	// Set default box extent (size)
+	GridSquareMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GridSquareMesh->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
+	GridSquareMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+	GridSquareMesh->SetGenerateOverlapEvents(true);
+	GridSquareMesh->SetNotifyRigidBodyCollision(true);
+
+	// Create the GridCollision component and attach it to the root
+	GridCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("GridCollision"));
+	GridCollision->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+	// Set default box extent (size)
+	GridCollision->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
 	GridCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GridCollision->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
 	GridCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	GridCollision->SetGenerateOverlapEvents(true);
 	GridCollision->SetNotifyRigidBodyCollision(true);
-
-    // Set collision properties if needed
-    GridCollision->SetCollisionProfileName(TEXT("BlockAll"));
-
 }
 
 // Called when the game starts or when spawned
 void AGridSquare::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
@@ -81,6 +88,7 @@ void AGridSquare::HandleActorCollision(AActor* InGridActor)
 void AGridSquare::SetGridManager(AGridManager* InGridManager)
 {
 	GridManager = InGridManager;
+	GridManager->OnEditModeDelegate.AddDynamic(this, &AGridSquare::OnEditMode);
 }
 
 AGridManager* AGridSquare::GetGridManager() const
@@ -137,7 +145,7 @@ void AGridSquare::UnsnapActor()
 	GridActor->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
 }
 
-void AGridSquare::MoveActor(GridSquareDirection InDirection)
+void AGridSquare::MoveActor(EGridSquareDirection InDirection)
 {
 	AGridSquare* to = GetNeighbourSquare(InDirection);
 
@@ -147,17 +155,28 @@ void AGridSquare::MoveActor(GridSquareDirection InDirection)
 	GridManager->MoveGridActor(GridActor, this, to);
 }
 
-AGridSquare* AGridSquare::GetNeighbourSquare(GridSquareDirection InNeighbourDirection) const
+AGridSquare* AGridSquare::GetNeighbourSquare(EGridSquareDirection InNeighbourDirection) const
 {
 	return *NeighbourSquares.Find(InNeighbourDirection);
 }
 
 void AGridSquare::UpdateNeighbours()
 {
-	
+	TMap<EGridSquareDirection, FGridLocation> neighbour_locations =
+	{
+		{EGridSquareDirection::North, FGridLocation(GridSquareLocation.Row + 1,GridSquareLocation.Column)},
+		{EGridSquareDirection::East,  FGridLocation(GridSquareLocation.Row,GridSquareLocation.Column +1)},
+		{EGridSquareDirection::South, FGridLocation(GridSquareLocation.Row - 1,GridSquareLocation.Column)},
+		{EGridSquareDirection::West,  FGridLocation(GridSquareLocation.Row,GridSquareLocation.Column -1)}
+	};
+
+	for (auto location_pair : neighbour_locations)
+	{
+		SetNeighbourSquare(location_pair.Key, GridManager->GetGridSquare(location_pair.Value));
+	}
 }
 
-void AGridSquare::SetNeighbourSquare(GridSquareDirection InGridSquareDirection, AGridSquare* InGridActor)
+void AGridSquare::SetNeighbourSquare(EGridSquareDirection InGridSquareDirection, AGridSquare* InGridActor)
 {
 	NeighbourSquares.Add(InGridSquareDirection, InGridActor);
 }
@@ -194,5 +213,5 @@ void AGridSquare::UpdateMaterial()
 		dynamic_material_instance = UMaterialInstanceDynamic::Create(FloorMaterial, GridSquareMesh);
 
 	// Apply the dynamic material instance to the mesh
-	GridSquareMesh->SetMaterial(0, dynamic_material_instance);	
+	GridSquareMesh->SetMaterial(0, dynamic_material_instance);
 }

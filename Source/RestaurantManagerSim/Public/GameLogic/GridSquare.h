@@ -9,7 +9,7 @@
 #include "GridSquare.generated.h"
 
 UENUM(BlueprintType)
-enum class GridSquareDirection : uint8
+enum class EGridSquareDirection : uint8
 {
 	North UMETA(DisplayName = "North"),
 	East UMETA(DisplayName = "East"),
@@ -73,13 +73,13 @@ public:
 
 	void UnsnapActor();
 
-	void MoveActor(GridSquareDirection InDirection);
+	void MoveActor(EGridSquareDirection InDirection);
 	
-	AGridSquare* GetNeighbourSquare(GridSquareDirection InNeighbourDirection) const;
+	AGridSquare* GetNeighbourSquare(EGridSquareDirection InNeighbourDirection) const;
 
 	void UpdateNeighbours();
 	
-	void SetNeighbourSquare(GridSquareDirection InGridSquareDirection, AGridSquare* InGridActor);
+	void SetNeighbourSquare(EGridSquareDirection InGridSquareDirection, AGridSquare* InGridActor);
 
 	void SetGridSquareLocation(const FGridLocation& InGridLocation);
 
@@ -89,7 +89,7 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<GridSquareDirection, AGridSquare*> NeighbourSquares;
+	TMap<EGridSquareDirection, AGridSquare*> NeighbourSquares;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* GridSquareMesh = nullptr;
@@ -107,7 +107,7 @@ protected:
 	AActor* GridActor = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* EditGridActor = nullptr;
+	AActor* EditModeGridActor = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsActorSnapped = false;

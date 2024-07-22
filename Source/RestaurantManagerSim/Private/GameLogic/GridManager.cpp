@@ -73,20 +73,17 @@ AGridSquare* AGridManager::CreateGridSquare()
 void AGridManager::StartEditMode()
 {
 	IsInEditMode = true;
-	OnEditModeDelegate.broadcast(IsInEditMode);
+	OnEditModeDelegate.Broadcast(IsInEditMode);
 }
 
 void AGridManager::StopEditMode()
 {
 	IsInEditMode = false;
-	OnEditModeDelegate.broadcast(IsInEditMode);
+	OnEditModeDelegate.Broadcast(IsInEditMode);
 }
 
 void AGridManager::MoveGridActor(AActor* InActor, AGridSquare* InFromGridSquare, AGridSquare* InToGridSquare)
 {
 	InFromGridSquare->UnsnapActor();
-	InFromGridSquare->UpdateGridActor(nullptr);
-	
-	InToGridSquare->UpdateGridActor(InActor);
-	InToGridSquare->SnapActorToGrid();
+	InToGridSquare->SnapActorToGrid(InActor);
 }
