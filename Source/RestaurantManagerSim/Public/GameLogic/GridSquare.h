@@ -22,6 +22,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void NotifyActorBeginOverlap(AActor* InOtherActor) override;
+	
+	virtual void NotifyActorEndOverlap(AActor* InOtherActor) override;
+
 	virtual void NotifyHit(UPrimitiveComponent* InMyComp, AActor* InOtherActor, UPrimitiveComponent* InOtherComp, bool InSelfMoved, FVector InHitLocation, FVector InHitNormal, FVector InNormalImpulse, const FHitResult& InHit) override;
 
 	bool IsActorClassOnIgnoreList(const TSubclassOf<AActor>& InClass) const;

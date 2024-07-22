@@ -40,6 +40,26 @@ void AGridSquare::Tick(float DeltaTime)
 
 }
 
+void AGridSquare::NotifyActorBeginOverlap(AActor* InOtherActor)
+{
+	Super::NotifyActorBeginOverlap(InOtherActor);
+
+	if (!InOtherActor || InOtherActor == this || InOtherActor == GridActor || IsActorClassOnIgnoreList(InOtherActor->GetClass()))
+		return;
+
+	SetGridActor(InOtherActor);
+}
+
+void AGridSquare::NotifyActorEndOverlap(AActor* InOtherActor)
+{
+	Super::NotifyActorEndOverlap(InOtherActor);
+
+	if (!InOtherActor || InOtherActor == this || InOtherActor == GridActor || IsActorClassOnIgnoreList(InOtherActor->GetClass()))
+		return;
+
+	SetGridActor(InOtherActor);
+}
+
 void AGridSquare::NotifyHit(UPrimitiveComponent* InMyComp, AActor* InOtherActor, UPrimitiveComponent* InOtherComp, bool InSelfMoved, FVector InHitLocation, FVector InHitNormal, FVector InNormalImpulse, const FHitResult& InHit)
 {
 	Super::NotifyHit(InMyComp, InOtherActor, InOtherComp, InSelfMoved, InHitLocation, InHitNormal, InNormalImpulse, InHit);
@@ -58,6 +78,7 @@ bool AGridSquare::IsActorClassOnIgnoreList(const TSubclassOf<AActor>& InClass) c
 void AGridSquare::SetGridActor(AActor* InGridActor)
 {
 	GridActor = InGridActor;
+	//GridActor->Set
 }
 
 bool AGridSquare::IsGridOccupied() const
