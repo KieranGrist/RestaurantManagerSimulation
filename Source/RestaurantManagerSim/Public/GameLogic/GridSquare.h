@@ -131,19 +131,19 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UMaterial* FloorMaterial;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModeColorA = FLinearColor::Black;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModeColorB = FLinearColor::White;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModeOccupiedColor = FLinearColor::Red;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModePreviewColor = FLinearColor::Yellow;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModeWallColor = FLinearColor::Blue;
 
 	const FLinearColor& GetEditModeColor() const;
