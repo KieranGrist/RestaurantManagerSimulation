@@ -8,29 +8,30 @@ AGridSquare::AGridSquare()
 	// Set this actor to call Tick() every frame. You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	// Create the GridCollision component and attach it to the root
+	// Create and configure the GridSquareMesh component
 	GridSquareMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GridSquareMesh"));
 	RootComponent = GridSquareMesh;
 
-	// Set default box extent (size)
 	GridSquareMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GridSquareMesh->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
 	GridSquareMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	GridSquareMesh->SetGenerateOverlapEvents(true);
 	GridSquareMesh->SetNotifyRigidBodyCollision(true);
 
-	// Create the GridCollision component and attach it to the root
+	// Create and configure the GridCollision component
 	GridCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("GridCollision"));
-	GridCollision->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	GridCollision->SetupAttachment(RootComponent);  // Use SetupAttachment instead of AttachToComponent
 
 	// Set default box extent (size)
-	GridCollision->InitBoxExtent(FVector(100.0f, 100.0f, 100.0f));
-	GridCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	GridCollision->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
+	GridCollision->InitBoxExtent(FVector(50.0f));  // Ensure the FVector has a float value
+
+	GridCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);  // Example change; use appropriate value based on your needs
+	GridCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);  // Change based on your needs
 	GridCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	GridCollision->SetGenerateOverlapEvents(true);
-	GridCollision->SetNotifyRigidBodyCollision(true);
+	GridCollision->SetNotifyRigidBodyCollision(false);  // Set to false if only overlap events are needed
 }
+
 
 // Called when the game starts or when spawned
 void AGridSquare::BeginPlay()
@@ -103,11 +104,15 @@ bool AGridSquare::IsGridOccupied() const
 
 void AGridSquare::RotateGridActorLeft()
 {
+	if (!GridActor)
+		return;
 	GridActor->SetActorRotation(GetActorRotation() + FRotator(0, 90, 0));
 }
 
 void AGridSquare::RotateGridActorRight()
 {
+	if (!GridActor)
+		return;
 	GridActor->SetActorRotation(GetActorRotation() + FRotator(0, -90, 0));
 }
 
@@ -141,12 +146,18 @@ void AGridSquare::SnapActorToGrid(AActor* InOtherActor)
 
 void AGridSquare::UnsnapActor()
 {
+	if (!GridActor)
+		return;
+
 	GridActor->SetActorRelativeLocation(EditModeSnapOffset);
 	GridActor->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
 }
 
 void AGridSquare::MoveActor(EGridSquareDirection InDirection)
 {
+	if (!GridActor)
+		return;
+
 	AGridSquare* to = GetNeighbourSquare(InDirection);
 
 	if (!to || !GridManager)
@@ -186,6 +197,11 @@ void AGridSquare::SetGridSquareLocation(const FGridLocation& InGridLocation)
 	GridSquareLocation = InGridLocation;
 }
 
+void AGridSquare::SetIndex(int32 InIndex)
+{
+	Index = InIndex;
+}
+
 const FGridLocation& AGridSquare::GetGridSquareLocation()
 {
 	return GridSquareLocation;
@@ -197,21 +213,26 @@ void AGridSquare::UpdateMaterial()
 	// Create a dynamic material instance
 	if (GridManager->IsInEditMode)
 	{
-		dynamic_material_instance = UMaterialInstanceDynamic::Create(GridEditMaterial, GridSquareMesh);
-
-
-		if (GridSquareLocation.Row % 2 == 0 || GridSquareLocation.Row == 0)
-		{
-			dynamic_material_instance->SetVectorParameterValue(FName("Color"), GridEditColor1);
-		}
-		else
-		{
-			dynamic_material_instance->SetVectorParameterValue(FName("Color"), GridEditColor2);
-		}
+		dynamic_material_instance = UMaterialInstanceDynamic::Create(EditModeMaterial, GridSquareMesh);
+		dynamic_material_instance->SetVectorParameterValue(FName("Color"), GetEditModeColor());
 	}
 	else
 		dynamic_material_instance = UMaterialInstanceDynamic::Create(FloorMaterial, GridSquareMesh);
 
 	// Apply the dynamic material instance to the mesh
 	GridSquareMesh->SetMaterial(0, dynamic_material_instance);
+}
+
+const FLinearColor& AGridSquare::GetEditModeColor() const
+{
+	if (GridActor)
+		return EditModeOccupiedColor;
+
+	if (EditModeGridActor)
+		return EditModePreviewColor;
+
+	if ((GridSquareLocation.Row + GridSquareLocation.Column) % 2 == 0)
+		return EditModeColorA;
+	else
+		return EditModeColorB;
 }

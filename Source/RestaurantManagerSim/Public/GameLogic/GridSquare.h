@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "GameLogic/GridManager.h"
 #include "GridSquare.generated.h"
 
@@ -68,7 +69,6 @@ public:
 	UFUNCTION(CallInEditor)
 	void RotateGridActorRight();
 
-	UFUNCTION(CallInEditor)
 	void SnapActorToGrid(AActor* InOtherActor);
 
 	void UnsnapActor();
@@ -76,15 +76,19 @@ public:
 	void MoveActor(EGridSquareDirection InDirection);
 	
 	AGridSquare* GetNeighbourSquare(EGridSquareDirection InNeighbourDirection) const;
-
+	
+	UFUNCTION(CallInEditor)
 	void UpdateNeighbours();
 	
 	void SetNeighbourSquare(EGridSquareDirection InGridSquareDirection, AGridSquare* InGridActor);
 
 	void SetGridSquareLocation(const FGridLocation& InGridLocation);
+	
+	void SetIndex(int32 InIndex);
 
 	const FGridLocation& GetGridSquareLocation();
-
+	
+	UFUNCTION(CallInEditor)
 	void UpdateMaterial();
 
 protected:
@@ -122,14 +126,25 @@ protected:
 	FGridLocation GridSquareLocation;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMaterial* GridEditMaterial;
+	UMaterial* EditModeMaterial;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UMaterial* FloorMaterial;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FLinearColor GridEditColor1 = FLinearColor::Black;
+	FLinearColor EditModeColorA = FLinearColor::Black;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FLinearColor GridEditColor2 = FLinearColor::White;
+	FLinearColor EditModeColorB = FLinearColor::White;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLinearColor EditModeOccupiedColor = FLinearColor::Red;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FLinearColor EditModePreviewColor= FLinearColor::Yellow;
+	
+	const FLinearColor& GetEditModeColor() const;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 Index;
 };

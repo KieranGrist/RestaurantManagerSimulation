@@ -26,19 +26,30 @@ void AGridManager::InitializeGrid(int32 InRows, int32 InColumns)
 
 	// Initialize neighbors for each grid square
 	FGridLocation grid_location;
-	for (grid_location.Row = 0; grid_location.Row < Rows; ++grid_location.Row)
+	int32 index = 1;
+	for (grid_location.Row = 1; grid_location.Row <= Rows; ++grid_location.Row)
 	{
-		for (grid_location.Column = 0; grid_location.Column < Columns; ++grid_location.Column)
+		for (grid_location.Column = 1; grid_location.Column <= Columns; ++grid_location.Column)
 		{
+			// Increment index
+			index++;
+
+			// Create and initialize the grid square
 			AGridSquare* grid_square = CreateGridSquare();
 			grid_square->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 			grid_square->SetActorRelativeLocation(location);
 			grid_square->SetGridSquareLocation(grid_location);
 			GridSquares.Add(grid_location, grid_square);
-			location.X += 100;
+			grid_square->SetIndex(index);
+			grid_square->UpdateMaterial();
+
+			// Move the location for the next column
+			location.Y += 100; // Assuming 100 units is the size of each grid square
 		}
-		location.X = 0;
-		location.Y += 100;
+
+		// Reset location.Y for the next row and move location.X for the next row
+		location.Y = 0;
+		location.X += 100; // Assuming 100 units is the spacing between columns
 	}
 
 	for (auto square_pair : GridSquares)
@@ -49,7 +60,18 @@ void AGridManager::InitializeGrid(int32 InRows, int32 InColumns)
 
 AGridSquare* AGridManager::GetGridSquare(const FGridLocation& InGridLocation) const
 {
-	return *GridSquares.Find(InGridLocation);
+	auto found_grid_square = GridSquares.Find(InGridLocation);
+
+	if (found_grid_square)
+	{
+		return *found_grid_square;
+	}
+	else
+	{
+		// Handle the case where the grid square is not found
+		UE_LOG(LogTemp, Warning, TEXT("GetGridSquare: No grid square found at location (%d, %d)"), InGridLocation.Row, InGridLocation.Column);
+		return nullptr;
+	}
 }
 
 AGridSquare* AGridManager::CreateGridSquare()
