@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "GameLogic/GridSquare.h"
 
 // Sets default values
@@ -43,42 +42,50 @@ void AGridSquare::Tick(float DeltaTime)
 void AGridSquare::NotifyActorBeginOverlap(AActor* InOtherActor)
 {
 	Super::NotifyActorBeginOverlap(InOtherActor);
-
-	if (!InOtherActor || InOtherActor == this || InOtherActor == GridActor || IsActorClassOnIgnoreList(InOtherActor->GetClass()))
-		return;
-
-	SetGridActor(InOtherActor);
+	HandleActorCollision(InOtherActor);
 }
 
 void AGridSquare::NotifyActorEndOverlap(AActor* InOtherActor)
 {
 	Super::NotifyActorEndOverlap(InOtherActor);
-
-	if (!InOtherActor || InOtherActor == this || InOtherActor == GridActor || IsActorClassOnIgnoreList(InOtherActor->GetClass()))
-		return;
-
-	SetGridActor(InOtherActor);
+	HandleActorCollision(InOtherActor);
 }
 
 void AGridSquare::NotifyHit(UPrimitiveComponent* InMyComp, AActor* InOtherActor, UPrimitiveComponent* InOtherComp, bool InSelfMoved, FVector InHitLocation, FVector InHitNormal, FVector InNormalImpulse, const FHitResult& InHit)
 {
 	Super::NotifyHit(InMyComp, InOtherActor, InOtherComp, InSelfMoved, InHitLocation, InHitNormal, InNormalImpulse, InHit);
+	HandleActorCollision(InOtherActor);
+}
 
-	if (!InOtherActor || InOtherActor == this || InOtherActor == GridActor || IsActorClassOnIgnoreList(InOtherActor->GetClass()))
-		return;
+void AGridSquare::OnEditMode(bool IsInEditMode)
+{
+	UpdateMaterial();
 
-	SetGridActor(InOtherActor);
+	if (!IsInEditMode)
+		UnsnapActor();
+	SnapActorToGrid(EditModeGridActor);
+	EditModeGridActor = nullptr;
 }
 
 bool AGridSquare::IsActorClassOnIgnoreList(const TSubclassOf<AActor>& InClass) const
 {
 	return ActorsToIgnore.Find(InClass) != INDEX_NONE;
 }
-
-void AGridSquare::SetGridActor(AActor* InGridActor)
+void AGridSquare::HandleActorCollision(AActor* InGridActor)
 {
-	GridActor = InGridActor;
-	//GridActor->Set
+	if (InGridActor == this || InGridActor == GridActor || IsActorClassOnIgnoreList(InGridActor->GetClass()))
+		return;
+	SnapActorToGrid(InGridActor);
+}
+
+void AGridSquare::SetGridManager(AGridManager* InGridManager)
+{
+	GridManager = InGridManager;
+}
+
+AGridManager* AGridSquare::GetGridManager() const
+{
+	return GridManager;
 }
 
 bool AGridSquare::IsGridOccupied() const
@@ -86,14 +93,106 @@ bool AGridSquare::IsGridOccupied() const
 	return IsValid(GridActor);
 }
 
-template<typename T>
-T* AGridSquare::GetGridActor() const
+void AGridSquare::RotateGridActorLeft()
 {
-	// Ensure that T is derived from AActor
-	static_assert(TIsDerivedFrom<T, AActor>::IsDerived, "T must be derived from AActor");
-
-	return Cast<T>(GridActor);
+	GridActor->SetActorRotation(GetActorRotation() + FRotator(0, 90, 0));
 }
 
-// Ensure the template function is instantiated for the necessary types
-template AActor* AGridSquare::GetGridActor<AActor>() const;
+void AGridSquare::RotateGridActorRight()
+{
+	GridActor->SetActorRotation(GetActorRotation() + FRotator(0, -90, 0));
+}
+
+void AGridSquare::SnapActorToGrid(AActor* InOtherActor)
+{
+	if (!InOtherActor)
+	{
+		UnsnapActor();
+		EditModeGridActor = nullptr;
+		GridActor = nullptr;
+		return;
+	}
+
+	// Grid Actors spawn in detached, when the player moves them with any system they are "popped" up and detached, if they are attached it means we have an actor which is larger then one grid!
+	if (InOtherActor->GetAttachParentActor())
+		return;
+
+	InOtherActor->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+	if (GridManager->IsInEditMode)
+	{
+		InOtherActor->SetActorRelativeLocation(EditModeSnapOffset);
+		EditModeGridActor = InOtherActor;
+	}
+	else
+	{
+		InOtherActor->SetActorRelativeLocation(ActorSnapOffset);
+		GridActor = InOtherActor;
+	}
+}
+
+void AGridSquare::UnsnapActor()
+{
+	GridActor->SetActorRelativeLocation(EditModeSnapOffset);
+	GridActor->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
+}
+
+void AGridSquare::MoveActor(GridSquareDirection InDirection)
+{
+	AGridSquare* to = GetNeighbourSquare(InDirection);
+
+	if (!to || !GridManager)
+		return;
+
+	GridManager->MoveGridActor(GridActor, this, to);
+}
+
+AGridSquare* AGridSquare::GetNeighbourSquare(GridSquareDirection InNeighbourDirection) const
+{
+	return *NeighbourSquares.Find(InNeighbourDirection);
+}
+
+void AGridSquare::UpdateNeighbours()
+{
+	
+}
+
+void AGridSquare::SetNeighbourSquare(GridSquareDirection InGridSquareDirection, AGridSquare* InGridActor)
+{
+	NeighbourSquares.Add(InGridSquareDirection, InGridActor);
+}
+
+void AGridSquare::SetGridSquareLocation(const FGridLocation& InGridLocation)
+{
+	GridSquareLocation = InGridLocation;
+}
+
+const FGridLocation& AGridSquare::GetGridSquareLocation()
+{
+	return GridSquareLocation;
+}
+
+void AGridSquare::UpdateMaterial()
+{
+	UMaterialInstanceDynamic* dynamic_material_instance = nullptr;
+	// Create a dynamic material instance
+	if (GridManager->IsInEditMode)
+	{
+		dynamic_material_instance = UMaterialInstanceDynamic::Create(GridEditMaterial, GridSquareMesh);
+
+
+		if (GridSquareLocation.Row % 2 == 0 || GridSquareLocation.Row == 0)
+		{
+			dynamic_material_instance->SetVectorParameterValue(FName("Color"), GridEditColor1);
+		}
+		else
+		{
+			dynamic_material_instance->SetVectorParameterValue(FName("Color"), GridEditColor2);
+		}
+	}
+	else
+		dynamic_material_instance = UMaterialInstanceDynamic::Create(FloorMaterial, GridSquareMesh);
+
+	// Apply the dynamic material instance to the mesh
+	GridSquareMesh->SetMaterial(0, dynamic_material_instance);	
+}
