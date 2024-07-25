@@ -46,7 +46,7 @@ public:
 	bool IsActorClassOnIgnoreList(const TSubclassOf<AInteractableActorBase>& InClass) const;
 
 	void HandleActorCollision(AInteractableActorBase* InOtherActor);
-	
+
 	template<class T>
 	T* GetGridActor() const
 	{
@@ -55,7 +55,7 @@ public:
 
 		return Cast<T>(GridActor);
 	}
-	
+
 	void SetGridManager(AGridManager* InGridManager);
 
 	AGridManager* GetGridManager() const;
@@ -75,16 +75,16 @@ public:
 	void UnsnapActor();
 
 	void MoveActor(EGridSquareDirection InDirection);
-	
+
 	AGridSquare* GetNeighbourSquare(EGridSquareDirection InNeighbourDirection) const;
-	
+
 	UFUNCTION(CallInEditor)
 	void UpdateNeighbours();
-	
+
 	void SetNeighbourSquare(EGridSquareDirection InGridSquareDirection, AGridSquare* InGridActor);
 
 	void SetGridSquareLocation(const FGridLocation& InGridLocation);
-	
+
 	void SetIndex(int32 InIndex);
 
 	const FGridLocation& GetGridSquareLocation();
@@ -120,33 +120,33 @@ protected:
 	bool IsActorSnapped = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector EditModeSnapOffset = FVector::ZeroVector;
+	USceneComponent* EditModeSnapOffset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector ActorSnapOffset = FVector::ZeroVector;
-	
-UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* ActorSnapOffset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FGridLocation GridSquareLocation;
-	
-UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UMaterial* EditModeMaterial;
-	
-UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UMaterial* FloorMaterial;
-	
-UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModeColorA = FLinearColor::Black;
-	
-UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModeColorB = FLinearColor::White;
 
-UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModeOccupiedColor = FLinearColor::Red;
-	
-UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModePreviewColor = FLinearColor::Yellow;
-	
-UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModeWallColor = FLinearColor::Blue;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)

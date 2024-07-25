@@ -21,7 +21,8 @@ AGridSquare::AGridSquare()
 
 	// Create and configure the GridCollision component
 	GridCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("GridCollision"));
-	GridCollision->SetupAttachment(RootComponent);  // Use SetupAttachment instead of AttachToComponent
+	GridCollision->SetupAttachment(RootComponent);
+
 
 	// Set default box extent (size)
 	GridCollision->InitBoxExtent(FVector(50.0f));  // Ensure the FVector has a float value
@@ -31,6 +32,16 @@ AGridSquare::AGridSquare()
 	GridCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 	GridCollision->SetGenerateOverlapEvents(true);
 	GridCollision->SetNotifyRigidBodyCollision(false);  // Set to false if only overlap events are needed
+
+	EditModeSnapOffset = CreateDefaultSubobject<USceneComponent>(TEXT("EditModeSnapOffset"));
+	ActorSnapOffset = CreateDefaultSubobject<USceneComponent>(TEXT("ActorSnapOffset"));
+
+	EditModeSnapOffset->SetupAttachment(RootComponent);
+	ActorSnapOffset->SetupAttachment(RootComponent);
+
+	EditModeSnapOffset->SetRelativeLocation(FVector(0, 0, 50));
+	ActorSnapOffset->SetRelativeLocation(FVector(0, 0, 100));
+
 }
 
 
@@ -38,7 +49,7 @@ AGridSquare::AGridSquare()
 void AGridSquare::BeginPlay()
 {
 	Super::BeginPlay();
-
+	UpdateMaterial(); 
 }
 
 // Called every frame
@@ -136,12 +147,12 @@ void AGridSquare::SnapActorToGrid(AInteractableActorBase* InOtherActor)
 
 	if (GridManager->IsInEditMode)
 	{
-		InOtherActor->SetActorRelativeLocation(EditModeSnapOffset);
+		InOtherActor->SetActorRelativeLocation(EditModeSnapOffset->GetRelativeLocation());
 		EditModeGridActor = InOtherActor;
 	}
 	else
 	{
-		InOtherActor->SetActorRelativeLocation(ActorSnapOffset);
+		InOtherActor->SetActorRelativeLocation(ActorSnapOffset->GetRelativeLocation());
 		GridActor = InOtherActor;
 	}
 }
@@ -150,14 +161,14 @@ void AGridSquare::UnsnapActor()
 {
 	if (EditModeGridActor)
 	{
-		EditModeGridActor->SetActorRelativeLocation(EditModeSnapOffset);
+		EditModeGridActor->SetActorRelativeLocation(EditModeSnapOffset->GetRelativeLocation());
 		EditModeGridActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 		EditModeGridActor = nullptr;
 	}
 
 	if (GridActor)
 	{
-		GridActor->SetActorRelativeLocation(EditModeSnapOffset);
+		GridActor->SetActorRelativeLocation(EditModeSnapOffset->GetRelativeLocation());
 		GridActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 		GridActor = nullptr;
 	}
@@ -186,9 +197,9 @@ void AGridSquare::UpdateNeighbours()
 	TMap<EGridSquareDirection, FGridLocation> neighbour_locations =
 	{
 		{EGridSquareDirection::North, FGridLocation(GridSquareLocation.Row + 1,GridSquareLocation.Column)},
-		{EGridSquareDirection::East,  FGridLocation(GridSquareLocation.Row,GridSquareLocation.Column +1)},
+		{EGridSquareDirection::East,  FGridLocation(GridSquareLocation.Row,GridSquareLocation.Column + 1)},
 		{EGridSquareDirection::South, FGridLocation(GridSquareLocation.Row - 1,GridSquareLocation.Column)},
-		{EGridSquareDirection::West,  FGridLocation(GridSquareLocation.Row,GridSquareLocation.Column -1)}
+		{EGridSquareDirection::West,  FGridLocation(GridSquareLocation.Row,GridSquareLocation.Column - 1)}
 	};
 
 	for (auto location_pair : neighbour_locations)
@@ -241,7 +252,7 @@ const FLinearColor& AGridSquare::GetEditModeColor() const
 	if (EditModeGridActor)
 		return EditModePreviewColor;
 
-	if (GridActor && GridActor->GetActorCategory().GetMainCategory().Equals(FActorCategory::GetEnumNameString(EMainCategory::Architecture)))
+	if (GridActor && GridActor->GetActorCategory().GetSubCategory().Equals(FActorCategory::GetEnumNameString(EArchitectureSubCategory::Wall)))
 		return EditModeWallColor;
 
 	if ((GridSquareLocation.Row + GridSquareLocation.Column) % 2 == 0)

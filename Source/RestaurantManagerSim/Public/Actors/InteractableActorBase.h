@@ -84,30 +84,40 @@ struct FActorCategory
 public:
 	FActorCategory();
 
-	template <typename TSubCategoryEnum>
-	FActorCategory(EMainCategory InMainCategory, TSubCategoryEnum InSubCategory);
-
+	template<typename EnumType>
+	FActorCategory(EMainCategory InMainCategory, EnumType InSubCategory)
+	{
+		static_assert(TIsEnum<EnumType>::Value, "Should only call this with enum types");
+		MainCategory = FActorCategory::GetEnumNameString(InMainCategory);
+		SubCategory = FActorCategory::GetEnumNameString(InSubCategory);
+		FullCategory = MainCategory + "::" + SubCategory;
+	}
 	const FString& GetFullCategory() const;
 	
 	const FString& GetMainCategory() const;
 	
 	const FString& GetSubCategory() const;
 
-	template <typename TEnum>
-	static FString GetEnumNameString(TEnum InEnum);
+	template<typename EnumType>
+	static FString GetEnumNameString(EnumType InEnum)
+	{
+		static_assert(TIsEnum<EnumType>::Value, "Should only call this with enum types");
+		UEnum* enum_ptr = StaticEnum<EnumType>();
+		check(enum_ptr != nullptr);
+		// Get the string representation of the enum value
+		return enum_ptr->GetNameStringByValue((int64) InEnum);
+	}
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FString FullCategory;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FString MainCategory;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FString SubCategory;
 };
-
-
 
 UCLASS()
 class RESTAURANTMANAGERSIM_API  AInteractableActorBase : public AActor
@@ -124,12 +134,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	//AGridSquare ParentSquare;
-	void BuildActorCategory();
-
 	const FActorCategory& GetActorCategory() const;
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* ActorMesh = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float PurchaseCost;
 
