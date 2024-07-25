@@ -84,18 +84,24 @@ struct FActorCategory
 public:
 	FActorCategory();
 
-	FActorCategory(EMainCategory InMainCategory, const FString& InSubCategory);
-	FActorCategory(EMainCategory InMainCategory, EArchitectureSubCategory InSubCategory);
-	FActorCategory(EMainCategory InMainCategory, EDecorationSubCategory InSubCategory);
-	FActorCategory(EMainCategory InMainCategory, EDeliverySubCategory InSubCategory);
-	FActorCategory(EMainCategory InMainCategory, EFoodSubCategory InSubCategory);
-	FActorCategory(EMainCategory InMainCategory, EKitchenSubCategory InSubCategory);
-	FActorCategory(EMainCategory InMainCategory, ERestaurantSubCategory InSubCategory);
+	template <typename TSubCategoryEnum>
+	FActorCategory(EMainCategory InMainCategory, TSubCategoryEnum InSubCategory);
 
-	FString GetFullCategory();
+	const FString& GetFullCategory() const;
+	
+	const FString& GetMainCategory() const;
+	
+	const FString& GetSubCategory() const;
+
+	template <typename TEnum>
+	static FString GetEnumNameString(TEnum InEnum);
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString FullCategory;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EMainCategory MainCategory;
+	FString MainCategory;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString SubCategory;

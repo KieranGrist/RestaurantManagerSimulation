@@ -37,79 +37,44 @@ const FActorCategory& AInteractableActorBase::GetActorCategory() const
 
 FActorCategory::FActorCategory()
 {
-	MainCategory = EMainCategory::Error;
+	MainCategory = FActorCategory::GetEnumNameString(EMainCategory::Error);
 
 	SubCategory = "";
-};
-
-FActorCategory::FActorCategory(EMainCategory InMainCategory, const FString& InSubCategory)
+	FullCategory = "";
+}
+const FString& FActorCategory::GetFullCategory() const
 {
-	MainCategory = InMainCategory;
-
-	SubCategory = InSubCategory;
+	return FullCategory;
+}
+const FString& FActorCategory::GetMainCategory() const
+{
+	return MainCategory;
+}
+const FString& FActorCategory::GetSubCategory() const
+{
+	return SubCategory;
 }
 
-FActorCategory::FActorCategory(EMainCategory InMainCategory, EArchitectureSubCategory InSubCategory)
+// Template constructor implementation
+template <typename TSubCategoryEnum>
+FActorCategory::FActorCategory(EMainCategory InMainCategory, TSubCategoryEnum InSubCategory)
 {
-	UEnum* sub_category_enum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EArchitectureSubCategory"), true);
-	if (sub_category_enum)
-	{
-		SubCategory = sub_category_enum->GetNameStringByValue(static_cast<int64>(InSubCategory));
-	}
+	MainCategory = FActorCategory::GetEnumNameString(InMainCategory);
+	SubCategory = FActorCategory::GetEnumNameString(InSubCategory);
+	FullCategory = MainCategory + "::" + SubCategory;
 }
 
-FActorCategory::FActorCategory(EMainCategory InMainCategory, EDecorationSubCategory InSubCategory)
+template<typename TEnum>
+FString GetEnumNameString(TEnum InEnum)
 {
-	UEnum* sub_category_enum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EDecorationSubCategory"), true);
-	if (sub_category_enum)
+	// Ensure TEnum is a UEnum type
+	const UEnum* enum_ptr = TEnum::StaticEnum();
+	if (!enum_ptr)
 	{
-		SubCategory = sub_category_enum->GetNameStringByValue(static_cast<int64>(InSubCategory));
+		// Log an error or return an empty string if the enum is not found
+		return TEXT("Error: Enum not found");
 	}
-}
 
-FActorCategory::FActorCategory(EMainCategory InMainCategory, EDeliverySubCategory InSubCategory)
-{
-	UEnum* sub_category_enum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EDeliverySubCategory"), true);
-	if (sub_category_enum)
-	{
-		SubCategory = sub_category_enum->GetNameStringByValue(static_cast<int64>(InSubCategory));
-	}
-}
-
-FActorCategory::FActorCategory(EMainCategory InMainCategory, EFoodSubCategory InSubCategory)
-{
-	UEnum* sub_category_enum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EFoodSubCategory"), true);
-	if (sub_category_enum)
-	{
-		SubCategory = sub_category_enum->GetNameStringByValue(static_cast<int64>(InSubCategory));
-	}
-}
-
-FActorCategory::FActorCategory(EMainCategory InMainCategory, EKitchenSubCategory InSubCategory)
-{
-	UEnum* sub_category_enum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EKitchenSubCategory"), true);
-	if (sub_category_enum)
-	{
-		SubCategory = sub_category_enum->GetNameStringByValue(static_cast<int64>(InSubCategory));
-	}
-}
-
-FActorCategory::FActorCategory(EMainCategory InMainCategory, ERestaurantSubCategory InSubCategory)
-{
-	UEnum* sub_category_enum = FindObject<UEnum>(ANY_PACKAGE, TEXT("ERestaurantSubCategory"), true);
-	if (sub_category_enum)
-	{
-		SubCategory = sub_category_enum->GetNameStringByValue(static_cast<int64>(InSubCategory));
-	}
-}
-
-FString FActorCategory::GetFullCategory()
-{
-	// Get string representation of the main category
-	UEnum* main_category_enum = FindObject<UEnum>(ANY_PACKAGE, TEXT("EMainCategory"), true);
-	if (main_category_enum)
-	{
-		return main_category_enum->GetNameStringByValue(static_cast<int64>(MainCategory)) + "::" + SubCategory;
-	}
-	return FString();
+	// Get the string representation of the enum value
+	return enum_ptr->GetNameStringByValue(static_cast<int64>(InEnum));
 }
