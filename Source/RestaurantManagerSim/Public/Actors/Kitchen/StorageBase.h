@@ -3,20 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Kitchen/FoodPrep/FoodPrepBase.h"
-#include "Mixer.generated.h"
+#include "Actors/Kitchen/KitchenEquipmentBase.h"
+#include "StorageBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RESTAURANTMANAGERSIM_API  AMixer : public AFoodPrepBase
+class RESTAURANTMANAGERSIM_API AStorageBase : public AKitchenEquipmentBase
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	AMixer();
+	AStorageBase();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
