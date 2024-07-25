@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Kitchen/Storage/ShelvingUnitBase.h"
-#include "FoodStorageContainerBase.generated.h"
+#include "StorageBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RESTAURANTMANAGERSIM_API  AFoodStorageContainerBase : public AShelvingUnitBase
+class RESTAURANTMANAGERSIM_API AStorageBase : public AShelvingUnitBase
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	AFoodStorageContainerBase();
+	AStorageBase();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

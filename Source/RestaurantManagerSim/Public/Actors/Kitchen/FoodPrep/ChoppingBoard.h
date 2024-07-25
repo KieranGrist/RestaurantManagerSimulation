@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actors/Kitchen/KitchenEquipmentBase.h"
+#include "Actors/Kitchen/FoodPrep/FoodPrepBase.h"
 #include "ChoppingBoard.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RESTAURANTMANAGERSIM_API  AChoppingBoard : public AKitchenEquipmentBase
+class RESTAURANTMANAGERSIM_API  AChoppingBoard : public AFoodPrepBase
 {
 	GENERATED_BODY()
 

@@ -3,6 +3,7 @@
 
 #include "GameLogic/GridManager.h"
 #include "GameLogic/GridSquare.h"
+#include "Actors/InteractableActorBase.h"
 
 AGridManager::AGridManager()
 {
@@ -104,7 +105,7 @@ void AGridManager::StopEditMode()
 	OnEditModeDelegate.Broadcast(IsInEditMode);
 }
 
-void AGridManager::MoveGridActor(AActor* InActor, AGridSquare* InFromGridSquare, AGridSquare* InToGridSquare)
+void AGridManager::MoveGridActor(AInteractableActorBase* InActor, AGridSquare* InFromGridSquare, AGridSquare* InToGridSquare)
 {
 	InFromGridSquare->UnsnapActor();
 	InToGridSquare->SnapActorToGrid(InActor);

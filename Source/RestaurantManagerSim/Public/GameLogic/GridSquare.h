@@ -17,6 +17,7 @@ enum class EGridSquareDirection : uint8
 	South UMETA(DisplayName = "South"),
 	West UMETA(DisplayName = "West")
 };
+class AInteractableActorBase;
 
 UCLASS()
 class RESTAURANTMANAGERSIM_API AGridSquare : public AActor
@@ -42,15 +43,15 @@ public:
 	UFUNCTION()
 	void OnEditMode(bool IsInEditMode);
 
-	bool IsActorClassOnIgnoreList(const TSubclassOf<AActor>& InClass) const;
+	bool IsActorClassOnIgnoreList(const TSubclassOf<AInteractableActorBase>& InClass) const;
 
-	void HandleActorCollision(AActor* InOtherActor);
+	void HandleActorCollision(AInteractableActorBase* InOtherActor);
 	
 	template<class T>
 	T* GetGridActor() const
 	{
 		// Ensure that T is derived from AActor
-		static_assert(TIsDerivedFrom<T, AActor>::IsDerived, "T must be derived from AActor");
+		static_assert(TIsDerivedFrom<T, AInteractableActorBase>::IsDerived, "T must be derived from AInteractableActorBase");
 
 		return Cast<T>(GridActor);
 	}
@@ -69,7 +70,7 @@ public:
 	UFUNCTION(CallInEditor)
 	void RotateGridActorRight();
 
-	void SnapActorToGrid(AActor* InOtherActor);
+	void SnapActorToGrid(AInteractableActorBase* InOtherActor);
 
 	void UnsnapActor();
 
@@ -87,7 +88,9 @@ public:
 	void SetIndex(int32 InIndex);
 
 	const FGridLocation& GetGridSquareLocation();
-	
+
+	const FLinearColor& GetEditModeColor() const;
+
 	UFUNCTION(CallInEditor)
 	void UpdateMaterial();
 
@@ -105,13 +108,13 @@ protected:
 	AGridManager* GridManager = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<TSubclassOf<AActor>> ActorsToIgnore;
+	TArray<TSubclassOf<AInteractableActorBase>> ActorsToIgnore;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* GridActor = nullptr;
+	AInteractableActorBase* GridActor = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* EditModeGridActor = nullptr;
+	AInteractableActorBase* EditModeGridActor = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsActorSnapped = false;
@@ -122,32 +125,30 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector ActorSnapOffset = FVector::ZeroVector;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FGridLocation GridSquareLocation;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UMaterial* EditModeMaterial;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UMaterial* FloorMaterial;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModeColorA = FLinearColor::Black;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModeColorB = FLinearColor::White;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModeOccupiedColor = FLinearColor::Red;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModePreviewColor = FLinearColor::Yellow;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FLinearColor EditModeWallColor = FLinearColor::Blue;
 
-	const FLinearColor& GetEditModeColor() const;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 Index;
 };

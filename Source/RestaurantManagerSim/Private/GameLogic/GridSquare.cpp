@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GameLogic/GridSquare.h"
+#include "Actors/InteractableActorBase.h"
 
 // Sets default values
 AGridSquare::AGridSquare()
@@ -50,19 +51,19 @@ void AGridSquare::Tick(float DeltaTime)
 void AGridSquare::NotifyActorBeginOverlap(AActor* InOtherActor)
 {
 	Super::NotifyActorBeginOverlap(InOtherActor);
-	HandleActorCollision(InOtherActor);
+	HandleActorCollision(Cast<AInteractableActorBase>(InOtherActor));
 }
 
 void AGridSquare::NotifyActorEndOverlap(AActor* InOtherActor)
 {
 	Super::NotifyActorEndOverlap(InOtherActor);
-	HandleActorCollision(InOtherActor);
+	HandleActorCollision(Cast<AInteractableActorBase>(InOtherActor));
 }
 
 void AGridSquare::NotifyHit(UPrimitiveComponent* InMyComp, AActor* InOtherActor, UPrimitiveComponent* InOtherComp, bool InSelfMoved, FVector InHitLocation, FVector InHitNormal, FVector InNormalImpulse, const FHitResult& InHit)
 {
 	Super::NotifyHit(InMyComp, InOtherActor, InOtherComp, InSelfMoved, InHitLocation, InHitNormal, InNormalImpulse, InHit);
-	HandleActorCollision(InOtherActor);
+	HandleActorCollision(Cast<AInteractableActorBase>(InOtherActor));
 }
 
 void AGridSquare::OnEditMode(bool IsInEditMode)
@@ -75,14 +76,17 @@ void AGridSquare::OnEditMode(bool IsInEditMode)
 	EditModeGridActor = nullptr;
 }
 
-bool AGridSquare::IsActorClassOnIgnoreList(const TSubclassOf<AActor>& InClass) const
+bool AGridSquare::IsActorClassOnIgnoreList(const TSubclassOf<AInteractableActorBase>& InClass) const
 {
 	return ActorsToIgnore.Find(InClass) != INDEX_NONE;
 }
-void AGridSquare::HandleActorCollision(AActor* InGridActor)
+void AGridSquare::HandleActorCollision(AInteractableActorBase* InGridActor)
 {
-	if (InGridActor == this || InGridActor == GridActor || IsActorClassOnIgnoreList(InGridActor->GetClass()))
+	if (InGridActor == GridActor)
 		return;
+	if (InGridActor && IsActorClassOnIgnoreList(InGridActor->GetClass()))
+		return;
+
 	SnapActorToGrid(InGridActor);
 }
 
@@ -116,18 +120,16 @@ void AGridSquare::RotateGridActorRight()
 	GridActor->SetActorRotation(GetActorRotation() + FRotator(0, -90, 0));
 }
 
-void AGridSquare::SnapActorToGrid(AActor* InOtherActor)
+void AGridSquare::SnapActorToGrid(AInteractableActorBase* InOtherActor)
 {
 	if (!InOtherActor)
 	{
 		UnsnapActor();
-		EditModeGridActor = nullptr;
-		GridActor = nullptr;
 		return;
 	}
 
 	// Grid Actors spawn in detached, when the player moves them with any system they are "popped" up and detached, if they are attached it means we have an actor which is larger then one grid!
-	if (InOtherActor->GetAttachParentActor())
+	if (InOtherActor->GetAttachParentActor() != this)
 		return;
 
 	InOtherActor->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
@@ -146,11 +148,19 @@ void AGridSquare::SnapActorToGrid(AActor* InOtherActor)
 
 void AGridSquare::UnsnapActor()
 {
-	if (!GridActor)
-		return;
+	if (EditModeGridActor)
+	{
+		EditModeGridActor->SetActorRelativeLocation(EditModeSnapOffset);
+		EditModeGridActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		EditModeGridActor = nullptr;
+	}
 
-	GridActor->SetActorRelativeLocation(EditModeSnapOffset);
-	GridActor->DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
+	if (GridActor)
+	{
+		GridActor->SetActorRelativeLocation(EditModeSnapOffset);
+		GridActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		GridActor = nullptr;
+	}
 }
 
 void AGridSquare::MoveActor(EGridSquareDirection InDirection)
@@ -230,6 +240,9 @@ const FLinearColor& AGridSquare::GetEditModeColor() const
 
 	if (EditModeGridActor)
 		return EditModePreviewColor;
+
+	if (GridActor && GridActor->GetActorCategory().MainCategory == EMainCategory::Architecture)
+		return EditModeWallColor;
 
 	if ((GridSquareLocation.Row + GridSquareLocation.Column) % 2 == 0)
 		return EditModeColorA;

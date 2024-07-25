@@ -5,6 +5,7 @@
 
 AFurnitureBase::AFurnitureBase()
 {
+	ActorCategory = FActorCategory(EMainCategory::Restaurant, ERestaurantSubCategory::Furniture);
 }
 
 // Called when the game starts or when spawned

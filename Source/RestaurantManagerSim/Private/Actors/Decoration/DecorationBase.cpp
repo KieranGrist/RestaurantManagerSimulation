@@ -5,6 +5,7 @@
 
 ADecorationBase::ADecorationBase()
 {
+	ActorCategory = FActorCategory(EMainCategory::Decoration, EDecorationSubCategory::None);
 }
 
 // Called when the game starts or when spawned

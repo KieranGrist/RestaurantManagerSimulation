@@ -5,6 +5,7 @@
 #include "GridManager.generated.h"
 
 class AGridSquare;
+class AInteractableActorBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEditMode, bool, IsInEditMode);
 
@@ -97,7 +98,7 @@ public:
 	FOnEditMode OnEditModeDelegate;
 
 	// Move an actor from one grid square to another
-	void MoveGridActor(AActor* InActor, AGridSquare* InFromGridSquare, AGridSquare* InToGridSquare);
+	void MoveGridActor(AInteractableActorBase* InActor, AGridSquare* InFromGridSquare, AGridSquare* InToGridSquare);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsInEditMode = false;

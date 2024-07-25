@@ -6,11 +6,13 @@
 #include "GameFramework/Actor.h"
 #include "InteractableActorBase.generated.h"
 
+UENUM(BlueprintType)
 enum class EMainCategory : uint8
 {
+	Error,
 	Architecture,
 	Decoration,
-	Delievery,
+	Delivery,
 	Food,
 	Kitchen,
 	Restaurant
@@ -20,11 +22,12 @@ UENUM(BlueprintType)
 enum class EArchitectureSubCategory : uint8
 {
 	None,
-	Wall,
-	Window,
-	Light,
+	Door,
 	Floor,
-	Roof
+	Light,
+	Roof,
+	Wall,
+	Window
 };
 
 UENUM(BlueprintType)
@@ -33,16 +36,16 @@ enum class EDecorationSubCategory : uint8
 	None,
 	Light,
 	Plant,
-	Rug,
+	Rug
 };
 
 UENUM(BlueprintType)
 enum class EDeliverySubCategory : uint8
 {
 	None,
-	Truck,
-	Parcel,
 	Crate,
+	Parcel,
+	Truck
 };
 
 UENUM(BlueprintType)
@@ -51,7 +54,8 @@ enum class EFoodSubCategory : uint8
 	None,
 	Ingredient,
 	Meal,
-	Trash
+	Serving,
+	Waste
 };
 
 UENUM(BlueprintType)
@@ -64,20 +68,47 @@ enum class EKitchenSubCategory : uint8
 	WashingUp
 };
 
-
 UENUM(BlueprintType)
 enum class ERestaurantSubCategory : uint8
 {
-	Stove UMETA(DisplayName = "Stove"),
-	Oven UMETA(DisplayName = "Oven")
+	None,
+	FrontOfHouse,
+	Furniture
 };
+
+USTRUCT(BlueprintType)
+struct FActorCategory
+{
+	GENERATED_BODY()
+
+public:
+	FActorCategory();
+
+	FActorCategory(EMainCategory InMainCategory, const FString& InSubCategory);
+	FActorCategory(EMainCategory InMainCategory, EArchitectureSubCategory InSubCategory);
+	FActorCategory(EMainCategory InMainCategory, EDecorationSubCategory InSubCategory);
+	FActorCategory(EMainCategory InMainCategory, EDeliverySubCategory InSubCategory);
+	FActorCategory(EMainCategory InMainCategory, EFoodSubCategory InSubCategory);
+	FActorCategory(EMainCategory InMainCategory, EKitchenSubCategory InSubCategory);
+	FActorCategory(EMainCategory InMainCategory, ERestaurantSubCategory InSubCategory);
+
+	FString GetFullCategory();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EMainCategory MainCategory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString SubCategory;
+};
+
+
 
 UCLASS()
 class RESTAURANTMANAGERSIM_API  AInteractableActorBase : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AInteractableActorBase();
 
@@ -88,11 +119,17 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	//AGridSquare ParentSquare;
+	void BuildActorCategory();
+
+	const FActorCategory& GetActorCategory() const;
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float PurchaseCost;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName ActorName;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FActorCategory ActorCategory;
 };
