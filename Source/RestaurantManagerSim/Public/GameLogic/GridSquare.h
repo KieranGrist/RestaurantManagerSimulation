@@ -70,6 +70,9 @@ public:
 	UFUNCTION(CallInEditor)
 	void RotateGridActorRight();
 
+	UFUNCTION(CallInEditor)
+	void EditorSnapActorToGrid();
+		
 	void SnapActorToGrid(AInteractableActorBase* InOtherActor);
 
 	void UnsnapActor();
