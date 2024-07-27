@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/InteractableActorBase.h"
+#include "GameLogic/GameData.h"
 #include "FoodBase.generated.h"
 
 /**

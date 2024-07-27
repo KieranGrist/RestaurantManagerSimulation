@@ -121,28 +121,22 @@ void AGridSquare::RotateGridActorLeft()
 {
 	if (!GridActor)
 		return;
-	GridActor->SetActorRotation(GetActorRotation() + FRotator(0, 90, 0));
+	FRotator current_rotation = GetActorRotation();
+	GridActor->SetActorRotation(FRotator(current_rotation.Pitch, current_rotation.Yaw + 90, current_rotation.Roll));
 }
 
 void AGridSquare::RotateGridActorRight()
 {
 	if (!GridActor)
 		return;
-	GridActor->SetActorRotation(GetActorRotation() + FRotator(0, -90, 0));
+	FRotator current_rotation = GetActorRotation();
+	GridActor->SetActorRotation(FRotator(current_rotation.Pitch, current_rotation.Yaw + -90, current_rotation.Roll));
 }
 
 void AGridSquare::EditorSnapActorToGrid()
 {
-
-	// Find all overlapping actors with the GridCollision component
-	TArray<AActor*> OverlappingActors;
-	GridCollision->GetOverlappingActors(OverlappingActors);
-
-	for 
-
 	if (!GridActor)
 		return;
-
 
 	GridActor->AttachToActor(this, FAttachmentTransformRules::SnapToTargetNotIncludingScale);;
 	GridActor->SetActorRelativeLocation(ActorSnapOffset->GetRelativeLocation());
