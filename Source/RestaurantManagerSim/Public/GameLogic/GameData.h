@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "Engine/DataAsset.h"
 #include "GameData.generated.h"
+
+// Enums for various categories and subcategories
 
 UENUM(BlueprintType)
 enum class EMainCategory : uint8
@@ -76,13 +79,30 @@ enum class ERestaurantSubCategory : uint8
 	Furniture
 };
 
+UENUM(BlueprintType)
+enum class EFoodPrepMethods : uint8
+{
+	Fried UMETA(DisplayName = "Fried"),
+	Boiled UMETA(DisplayName = "Boiled"),
+	Baked UMETA(DisplayName = "Baked"),
+	Grilled UMETA(DisplayName = "Grilled"),
+	Raw UMETA(DisplayName = "Raw"),
+	Steamed UMETA(DisplayName = "Steamed"),
+	Roasted UMETA(DisplayName = "Roasted"),
+	Poached UMETA(DisplayName = "Poached"),
+	Sauteed UMETA(DisplayName = "Sauteed"),
+	Blanch UMETA(DisplayName = "Blanch")
+};
+
+// Struct to manage actor categories
+
 USTRUCT(BlueprintType)
 struct FActorCategory
 {
 	GENERATED_BODY()
 
 public:
-	FActorCategory();
+	FActorCategory() {}
 
 	template<typename EnumType>
 	FActorCategory(EMainCategory InMainCategory, EnumType InSubCategory)
@@ -92,6 +112,7 @@ public:
 		SubCategory = FActorCategory::GetEnumNameString(InSubCategory);
 		FullCategory = MainCategory + "::" + SubCategory;
 	}
+
 	const FString& GetFullCategory() const;
 
 	const FString& GetMainCategory() const;
@@ -102,11 +123,37 @@ public:
 	static FString GetEnumNameString(EnumType InEnum)
 	{
 		static_assert(TIsEnum<EnumType>::Value, "Should only call this with enum types");
-		UEnum* enum_ptr = StaticEnum<EnumType>();
-		check(enum_ptr != nullptr);
-		// Get the string representation of the enum value
-		return enum_ptr->GetNameStringByValue((int64)InEnum);
+		UEnum* EnumPtr = StaticEnum<EnumType>();
+		check(EnumPtr != nullptr);
+		return EnumPtr->GetNameStringByValue((int64)InEnum);
 	}
+
+
+	bool operator==(const FActorCategory& Other) const
+	{
+		return FullCategory == Other.FullCategory &&
+			MainCategory == Other.MainCategory &&
+			SubCategory == Other.SubCategory;
+	}
+
+	bool operator!=(const FActorCategory& Other) const
+	{
+		return !(*this == Other);
+	}
+
+	// Define a hash function for FActorCategory
+	friend uint32 GetTypeHash(const FActorCategory& Category)
+	{
+		// Combine the hash values of the category fields
+		return HashCombine(
+			GetTypeHash(Category.FullCategory),
+			HashCombine(
+				GetTypeHash(Category.MainCategory),
+				GetTypeHash(Category.SubCategory)
+			)
+		);
+	}
+
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -120,90 +167,90 @@ protected:
 };
 
 USTRUCT(BlueprintType)
-struct FMoney
+struct FSpawnableActors
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
 public:
-     // Default constructor
-    FMoney()
-        : Amount(0.0f) {}
-
-    // Parameterized constructor
-    FMoney(float InAmount)
-        : Amount(FMath::Max(0.0f, InAmount)) {}
-
-    // Overload addition operator
-    FMoney operator+(const FMoney& Other) const
-    {
-        return FMoney(Amount + Other.Amount);
-    }
-
-    // Overload subtraction operator
-    FMoney operator-(const FMoney& Other) const
-    {
-        return FMoney(FMath::Max(0.0f, Amount - Other.Amount));
-    }
-
-    // Overload assignment operator for addition
-    FMoney& operator+=(const FMoney& Other)
-    {
-        Amount += Other.Amount;
-        return *this;
-    }
-
-    // Overload assignment operator for subtraction
-    FMoney& operator-=(const FMoney& Other)
-    {
-        Amount = FMath::Max(0.0f, Amount - Other.Amount);
-        return *this;
-    }
-
-    // Overload equality operator
-    bool operator==(const FMoney& Other) const
-    {
-        return Amount == Other.Amount;
-    }
-
-    // Overload inequality operator
-    bool operator!=(const FMoney& Other) const
-    {
-        return !(*this == Other);
-    }
-
-    // Utility function to check if the amount is valid
-    bool IsValid() const
-    {
-        return Amount >= 0.0f;
-    }
-
-    float GetAmount()
-protected:
-    // Amount of money
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Money")
-    float Amount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FString, TSubclassOf<class AInteractableActorBase>> MappedClasses;
 };
 
-struct FIngredientData : public FTableRowBase
+
+
+
+// Data Asset classes for Food, Ingredient, and Meal data
+
+UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API UFoodDataAsset : public UPrimaryDataAsset
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName FoodName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FDateTime CreationTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* UITexture;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UStaticMesh* FoodMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Cost;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Quality;
 };
 
-UCLASS()
+UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API UIngredientDataAsset : public UFoodDataAsset
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<EFoodPrepMethods, bool> IngredientPrepMethods;
+	TArray<class UPreparedIngredientDataAsset>IngredientVariants;
+};
+
+UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API UPreparedIngredientDataAsset : public UIngredientDataAsset
+{
+	GENERATED_BODY()
+
+public:
+	// No additional properties needed here, it inherits everything from UIngredientDataAsset
+};
+
+UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API UMealDataAsset : public UFoodDataAsset
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<UIngredientDataAsset*> Ingredients;
+};
+
+// Game data class for managing player's money and other game-specific data
+
+UCLASS(BlueprintType)
 class RESTAURANTMANAGERSIM_API UGameData : public UObject
 {
 	GENERATED_BODY()
-	
+
 public:
-    // Currency symbol, e.g., "$", "€"
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Money")
-    FString CurrencySymbol;
+	void AddMoney(float InAddend);
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Money")
-    FMoney PlayersMoney = FMoney(10000);
+	const float& GetCurrentMoney() const;
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Money")
+	FString CurrencySymbol;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Money")
+	float PlayersMoney = 10000.0f;
 };
-
-
-

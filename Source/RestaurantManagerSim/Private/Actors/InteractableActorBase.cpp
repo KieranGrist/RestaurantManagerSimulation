@@ -38,23 +38,3 @@ const FActorCategory& AInteractableActorBase::GetActorCategory() const
 {
 	return ActorCategory;
 }
-
-FActorCategory::FActorCategory()
-{
-	MainCategory = FActorCategory::GetEnumNameString(EMainCategory::Error);
-
-	SubCategory = "";
-	FullCategory = "";
-}
-const FString& FActorCategory::GetFullCategory() const
-{
-	return FullCategory;
-}
-const FString& FActorCategory::GetMainCategory() const
-{
-	return MainCategory;
-}
-const FString& FActorCategory::GetSubCategory() const
-{
-	return SubCategory;
-}

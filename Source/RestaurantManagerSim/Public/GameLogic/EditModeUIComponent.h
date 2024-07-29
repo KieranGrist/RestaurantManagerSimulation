@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameLogic/GameData.h"
 #include "EditModeUIComponent.generated.h"
 
 
@@ -23,6 +24,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray <TSubclassOf<class AInteractableActorBase>> UIAvailableActors;
 
-		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<FActorCategory, FSpawnableActors> SpawnableActorsMap;
 };
