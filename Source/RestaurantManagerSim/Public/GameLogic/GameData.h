@@ -95,7 +95,6 @@ enum class EFoodPrepMethods : uint8
 };
 
 // Struct to manage actor categories
-
 USTRUCT(BlueprintType)
 struct FActorCategory
 {
@@ -108,19 +107,13 @@ public:
 	FActorCategory(EMainCategory InMainCategory, EnumType InSubCategory)
 	{
 		static_assert(TIsEnum<EnumType>::Value, "Should only call this with enum types");
-		MainCategory = FActorCategory::GetEnumNameString(InMainCategory);
-		SubCategory = FActorCategory::GetEnumNameString(InSubCategory);
+		MainCategory = FActorCategory::EnumToString(InMainCategory);
+		SubCategory = FActorCategory::EnumToString(InSubCategory);
 		FullCategory = MainCategory + "::" + SubCategory;
 	}
 
-	const FString& GetFullCategory() const;
-
-	const FString& GetMainCategory() const;
-
-	const FString& GetSubCategory() const;
-
 	template<typename EnumType>
-	static FString GetEnumNameString(EnumType InEnum)
+	static FString EnumToString(EnumType InEnum)
 	{
 		static_assert(TIsEnum<EnumType>::Value, "Should only call this with enum types");
 		UEnum* EnumPtr = StaticEnum<EnumType>();
@@ -128,6 +121,21 @@ public:
 		return EnumPtr->GetNameStringByValue((int64)InEnum);
 	}
 
+	// Convert string to enum
+	template<typename EnumType>
+	EnumType StringToEnum(FString InName)
+	{
+		static_assert(TIsEnum<EnumType>::Value, "Should only call this with enum types");
+		UEnum* EnumPointer = StaticEnum<EnumType>();
+		check(EnumPointer != nullptr);
+		int64 EnumValue = EnumPointer->GetValueByName(FName(*InName));
+
+		if (EnumValue == INDEX_NONE)
+		{
+			return EnumType(); // Default-constructed value (or handle the error appropriately)
+		}
+		return static_cast<EnumType>(EnumValue);
+	}
 
 	bool operator==(const FActorCategory& Other) const
 	{
@@ -140,6 +148,12 @@ public:
 	{
 		return !(*this == Other);
 	}
+
+	const FString& GetFullCategory() const;
+
+	const FString& GetMainCategory() const;
+
+	const FString& GetSubCategory() const;
 
 	// Define a hash function for FActorCategory
 	friend uint32 GetTypeHash(const FActorCategory& Category)
