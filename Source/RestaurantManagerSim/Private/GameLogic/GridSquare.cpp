@@ -263,7 +263,7 @@ const FLinearColor& AGridSquare::GetEditModeColor() const
 	if (EditModeGridActor)
 		return EditModePreviewColor;
 
-	if (GridActor && GridActor->GetActorCategory().GetSubCategory().Equals(FActorCategory::GetEnumNameString(EArchitectureSubCategory::Wall)))
+	if (GridActor && GridActor->GetActorCategory().GetSubCategory().Equals(FActorCategory::EnumToString(EArchitectureSubCategory::Wall)))
 		return EditModeWallColor;
 
 	if ((GridSquareLocation.Row + GridSquareLocation.Column) % 2 == 0)

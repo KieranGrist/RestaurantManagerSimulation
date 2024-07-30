@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GameLogic/GameData.h"
 #include "PlayerPawnBase.generated.h"
 
 UCLASS()
@@ -26,4 +27,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(CallInEditor, Category = EditorMode)
+	void CreateSpawnableActorsMap();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorMode)
+	TArray <TSubclassOf<class AInteractableActorBase>> UIAvailableActors;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorMode)
+	TMap<FActorCategory, FSpawnableActors> SpawnableActorsMap;
 };
