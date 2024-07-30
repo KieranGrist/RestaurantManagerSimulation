@@ -7,8 +7,6 @@
 #include "Engine/DataAsset.h"
 #include "GameData.generated.h"
 
-// Enums for various categories and subcategories
-
 UENUM(BlueprintType)
 enum class EMainCategory : uint8
 {
@@ -94,7 +92,19 @@ enum class EFoodPrepMethods : uint8
 	Blanch UMETA(DisplayName = "Blanch")
 };
 
-// Struct to manage actor categories
+USTRUCT(BlueprintType)
+struct FActorCategoryBase
+{
+	GENERATED_BODY()
+
+public:
+	FActorCategoryBase();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	EMainCategory MainCategory;
+};
+
+
 USTRUCT(BlueprintType)
 struct FActorCategory
 {
@@ -149,11 +159,6 @@ public:
 		return !(*this == Other);
 	}
 
-	const FString& GetFullCategory() const;
-
-	const FString& GetMainCategory() const;
-
-	const FString& GetSubCategory() const;
 
 	// Define a hash function for FActorCategory
 	friend uint32 GetTypeHash(const FActorCategory& Category)
@@ -168,16 +173,23 @@ public:
 		);
 	}
 
+	const FString& GetFullCategory() const;
+
+	const EMainCategory& GetMainCategory() const;
+
+	const EArchitectureSubCategory& GetSubCategory() const;
+	const EDecorationSubCategory& GetSubCategory() const;
+	const EDeliverySubCategory& GetSubCategory() const;
+	const EFoodSubCategory& GetSubCategory() const;
+	const EKitchenSubCategory& GetSubCategory() const;
+	const ERestaurantSubCategory& GetSubCategory() const;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FString FullCategory;
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FString MainCategory;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FString SubCategory;
+	EMainCategory MainCategory;
 };
 
 USTRUCT(BlueprintType)
@@ -189,9 +201,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<FString, TSubclassOf<class AInteractableActorBase>> MappedClasses;
 };
-
-
-
 
 // Data Asset classes for Food, Ingredient, and Meal data
 

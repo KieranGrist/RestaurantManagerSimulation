@@ -31,7 +31,7 @@ public:
 	void CreateSpawnableActorsMap();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorMode)
-	TArray <TSubclassOf<class AInteractableActorBase>> UIAvailableActors;
+	TArray<TSubclassOf<class AInteractableActorBase>> UIAvailableActors;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorMode)
 	TMap<FActorCategory, FSpawnableActors> SpawnableActorsMap;
