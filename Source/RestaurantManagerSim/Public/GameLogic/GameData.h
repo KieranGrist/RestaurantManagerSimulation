@@ -93,19 +93,6 @@ enum class EFoodPrepMethods : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FActorCategoryBase
-{
-	GENERATED_BODY()
-
-public:
-	FActorCategoryBase();
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	EMainCategory MainCategory;
-};
-
-
-USTRUCT(BlueprintType)
 struct FActorCategory
 {
 	GENERATED_BODY()
@@ -159,7 +146,6 @@ public:
 		return !(*this == Other);
 	}
 
-
 	// Define a hash function for FActorCategory
 	friend uint32 GetTypeHash(const FActorCategory& Category)
 	{
@@ -175,21 +161,19 @@ public:
 
 	const FString& GetFullCategory() const;
 
-	const EMainCategory& GetMainCategory() const;
+	const FString& GetMainCategory() const;
 
-	const EArchitectureSubCategory& GetSubCategory() const;
-	const EDecorationSubCategory& GetSubCategory() const;
-	const EDeliverySubCategory& GetSubCategory() const;
-	const EFoodSubCategory& GetSubCategory() const;
-	const EKitchenSubCategory& GetSubCategory() const;
-	const ERestaurantSubCategory& GetSubCategory() const;
+	const FString& GetSubCategory() const;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FString FullCategory;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	EMainCategory MainCategory;
+	FString MainCategory;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FString SubCategory;
 };
 
 USTRUCT(BlueprintType)
@@ -205,7 +189,26 @@ public:
 // Data Asset classes for Food, Ingredient, and Meal data
 
 UCLASS(BlueprintType)
-class RESTAURANTMANAGERSIM_API UFoodDataAsset : public UPrimaryDataAsset
+class RESTAURANTMANAGERSIM_API UGameDataAsset : public UPrimaryDataAsset
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UTexture2D* UITexture;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+
+	UStaticMesh* Mesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FActorCategory ActorCategory;
+};
+
+UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API UFoodDataAsset : public UGameDataAsset
 {
 	GENERATED_BODY()
 
@@ -217,16 +220,51 @@ public:
 	FDateTime CreationTime;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UTexture2D* UITexture;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UStaticMesh* FoodMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Cost;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Quality;
+};
+
+UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API UArchitectureDataAsset : public UGameDataAsset
+{
+	GENERATED_BODY()
+
+public:
+};
+
+UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API UDecorationDataAsset : public UGameDataAsset
+{
+	GENERATED_BODY()
+
+public:
+
+};
+
+UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API UDeliveryDataAsset : public UGameDataAsset
+{
+	GENERATED_BODY()
+
+public:
+};
+
+UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API UKitchenDataAsset : public UGameDataAsset
+{
+	GENERATED_BODY()
+
+public:
+};
+
+UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API URestaurantDataAsset : public UGameDataAsset
+{
+	GENERATED_BODY()
+
+public:
 };
 
 UCLASS(BlueprintType)
@@ -237,6 +275,7 @@ class RESTAURANTMANAGERSIM_API UIngredientDataAsset : public UFoodDataAsset
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<EFoodPrepMethods, bool> IngredientPrepMethods;
+
 	TArray<class UPreparedIngredientDataAsset>IngredientVariants;
 };
 

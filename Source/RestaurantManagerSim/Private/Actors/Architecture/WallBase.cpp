@@ -7,7 +7,7 @@ AWallBase::AWallBase()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	ActorCategory = FActorCategory(EMainCategory::Architecture, EArchitectureSubCategory::Wall);
+	ActorData->ActorCategory = FActorCategory(EMainCategory::Architecture, EArchitectureSubCategory::Wall);
 }
 
 // Called when the game starts or when spawned

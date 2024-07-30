@@ -8,7 +8,7 @@ AFoodPrepBase::AFoodPrepBase()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	ActorCategory = FActorCategory(EMainCategory::Kitchen, EKitchenSubCategory::FoodPrep);
+	ActorData->ActorCategory = FActorCategory(EMainCategory::Kitchen, EKitchenSubCategory::FoodPrep);
 }
 
 // Called when the game starts or when spawned

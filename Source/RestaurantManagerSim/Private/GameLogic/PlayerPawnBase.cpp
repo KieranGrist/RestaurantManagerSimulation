@@ -53,12 +53,19 @@ void APlayerPawnBase::CreateSpawnableActorsMap()
         spawnable_actors.MappedClasses.Add(actor_class->GetName(), actor_class);
     }
 
-    //SpawnableActorsMap.KeySort([](const FActorCategory& A, const FActorCategory& B) {
-    //    EMainCategory a_main_category;
-    //    EMainCategory b_main_category;
+    SpawnableActorsMap.KeySort([](const FActorCategory& A, const FActorCategory& B) 
+        {
+            if (A.GetMainCategory() < B.GetMainCategory())
+                return true;
 
+            if (A.GetMainCategory() > B.GetMainCategory())
+                return false;
 
+            if (A.GetSubCategory() < B.GetSubCategory())
+                return true;
 
-    //  //  A.GetCategoriesAsEnums();
-    // });
+            if (A.GetSubCategory() > B.GetSubCategory())
+                return false;
+            return false;
+     });
 }

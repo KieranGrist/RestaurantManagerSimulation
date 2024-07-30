@@ -5,7 +5,7 @@
 
 AKitchenEquipmentBase::AKitchenEquipmentBase()
 {
-	ActorCategory = FActorCategory(EMainCategory::Kitchen, EKitchenSubCategory::None);
+	ActorData->ActorCategory = FActorCategory(EMainCategory::Kitchen, EKitchenSubCategory::None);
 }
 
 // Called when the game starts or when spawned
