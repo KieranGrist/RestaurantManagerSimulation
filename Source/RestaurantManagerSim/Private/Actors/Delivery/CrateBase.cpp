@@ -8,7 +8,7 @@ ACrateBase::ACrateBase()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	ActorData->ActorCategory = FActorCategory(EMainCategory::Delivery, EDeliverySubCategory::Crate);
+	ActorCategory = FActorCategory(EMainCategory::Delivery, EDeliverySubCategory::Crate);
 }
 
 // Called when the game starts or when spawned

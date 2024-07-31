@@ -5,7 +5,7 @@
 
 ARestaurantEquipmentBase::ARestaurantEquipmentBase()
 {
-	ActorData->ActorCategory = FActorCategory(EMainCategory::Restaurant, ERestaurantSubCategory::None);
+	ActorCategory = FActorCategory(EMainCategory::Restaurant, ERestaurantSubCategory::None);
 }
 
 // Called when the game starts or when spawned

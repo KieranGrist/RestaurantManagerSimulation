@@ -28,11 +28,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(CallInEditor, Category = EditorMode)
-	void CreateSpawnableActorsMap();
+	void CreateEditorModeActorsMap();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorMode)
-	TArray<TSubclassOf<class AInteractableActorBase>> UIAvailableActors;
+	TArray<TSubclassOf<class AInteractableActorBase>> EditorModeBPActors;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorMode)
-	TMap<FActorCategory, FSpawnableActors> SpawnableActorsMap;
+	TMap<FActorCategory, FEditorModeActors> EditorModeActorsMap;
 };

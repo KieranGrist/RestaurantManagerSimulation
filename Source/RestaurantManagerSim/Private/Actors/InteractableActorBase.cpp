@@ -38,5 +38,5 @@ void AInteractableActorBase::Tick(float DeltaTime)
 
 const FActorCategory& AInteractableActorBase::GetActorCategory() const
 {
-	return ActorData->ActorCategory;
+	return ActorCategory;
 }

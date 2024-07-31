@@ -8,7 +8,7 @@ AWindowBase::AWindowBase()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	ActorData->ActorCategory = FActorCategory(EMainCategory::Architecture, EArchitectureSubCategory::Window);
+	ActorCategory = FActorCategory(EMainCategory::Architecture, EArchitectureSubCategory::Window);
 }
 
 // Called when the game starts or when spawned

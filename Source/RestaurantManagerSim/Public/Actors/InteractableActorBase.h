@@ -37,4 +37,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UGameDataAsset* ActorData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FActorCategory ActorCategory;
 };

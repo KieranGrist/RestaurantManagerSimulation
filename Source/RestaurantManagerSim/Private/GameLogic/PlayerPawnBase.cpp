@@ -13,7 +13,7 @@ APlayerPawnBase::APlayerPawnBase()
 void APlayerPawnBase::BeginPlay()
 {
 	Super::BeginPlay();
-    CreateSpawnableActorsMap();
+    CreateEditorModeActorsMap();
 }
 
 // Called every frame
@@ -30,11 +30,11 @@ void APlayerPawnBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 }
 
-void APlayerPawnBase::CreateSpawnableActorsMap()
+void APlayerPawnBase::CreateEditorModeActorsMap()
 {
-    SpawnableActorsMap.Empty();
+    EditorModeActorsMap.Empty();
 
-    for (TSubclassOf<AInteractableActorBase> actor_class : UIAvailableActors)
+    for (TSubclassOf<AInteractableActorBase> actor_class : EditorModeBPActors)
     {
         if (!actor_class)
         {
@@ -46,14 +46,19 @@ void APlayerPawnBase::CreateSpawnableActorsMap()
 
         if (!default_actor)
             continue;
-        FActorCategory actor_category = default_actor->GetActorCategory();
+        const FActorCategory& actor_category = default_actor->GetActorCategory();
 
         // Add the actor class to the map under its category
-        FSpawnableActors& spawnable_actors = SpawnableActorsMap.FindOrAdd(actor_category);
-        spawnable_actors.MappedClasses.Add(actor_class->GetName(), actor_class);
+        FEditorModeActors& spawnable_actors = EditorModeActorsMap.FindOrAdd(actor_category);
+
+        FEditorModeActorBase new_actor_Type = FEditorModeActorBase();
+
+        new_actor_Type.ActorSpawnClass = actor_class;
+
+        spawnable_actors.MappedClasses.Add(actor_class->GetName(), new_actor_Type);
     }
 
-    SpawnableActorsMap.KeySort([](const FActorCategory& A, const FActorCategory& B) 
+    EditorModeActorsMap.KeySort([](const FActorCategory& A, const FActorCategory& B) 
         {
             if (A.GetMainCategory() < B.GetMainCategory())
                 return true;
