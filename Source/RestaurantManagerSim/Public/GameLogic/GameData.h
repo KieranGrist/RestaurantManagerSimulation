@@ -222,11 +222,12 @@ public:
 #if WITH_EDITOR
 	// Override PostEditChangeProperty
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-	void UpdateFileName();
 #endif
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName Name;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName FileName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* UITexture;

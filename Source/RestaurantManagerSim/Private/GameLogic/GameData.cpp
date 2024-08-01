@@ -32,33 +32,6 @@ void UGameDataAsset::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
 {
 	if (PropertyChangedEvent.GetPropertyName() == GET_MEMBER_NAME_CHECKED(UGameDataAsset, Name))
 	{
-		UpdateFileName();
+		FileName = FName(Name.ToString().Replace(TEXT(" "), TEXT("")));
 	}
-}
-
-void UGameDataAsset::UpdateFileName()
-{
-	// Convert name to string and remove spaces
-	FString new_name = Name.ToString().Replace(TEXT(" "), TEXT(""));
-
-	// Update the asset's file name
-	if (new_name.IsEmpty())
-		return;
-
-	// Get the package for the asset
-	UPackage* package = GetPackage();
-
-	if (!package)
-		return;
-	// Construct the new package path
-	FString package_path = package->GetName();
-	FString new_package_path = FPaths::Combine(FPaths::GetPath(package_path), new_name);
-
-	if (package->Rename(*new_package_path))
-		// Save the package if the rename was successful
-		UPackage::SavePackage(package, nullptr, EObjectFlags::RF_Standalone, *new_package_path);
-
-	else
-		UE_LOG(LogTemp, Warning, TEXT("Failed to rename package to: %s"), *new_package_path);
-
 }
