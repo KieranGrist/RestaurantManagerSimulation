@@ -30,5 +30,5 @@ const FString& FActorCategory::GetSubCategory() const
 
 void UGameDataAsset::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-	FileName = FName("DA" + Name.ToString().Replace(TEXT(" "), TEXT("")));
+	FileName = FName("DA" + DisplayName.ToString().Replace(TEXT(" "), TEXT("")));
 }

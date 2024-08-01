@@ -63,7 +63,6 @@ enum class EFoodSubCategory : uint8
 	Ingredient UMETA(DisplayName = "Ingredient"),
 	Meal UMETA(DisplayName = "Meal"),
 	Serving UMETA(DisplayName = "Serving"),
-	Waste UMETA(DisplayName = "Waste")
 };
 
 // Subcategories for Kitchen
@@ -90,6 +89,29 @@ enum class ERestaurantSubCategory : uint8
 UENUM(BlueprintType)
 enum class EFoodPrepMethods : uint8
 {
+	Dicing UMETA(DisplayName = "Dicing"),
+	Slicing UMETA(DisplayName = "Slicing"),
+	Chopping UMETA(DisplayName = "Chopping"),
+	Grating UMETA(DisplayName = "Grating"),
+	Peeling UMETA(DisplayName = "Peeling"),
+	Mincing UMETA(DisplayName = "Mincing"),
+	Blending UMETA(DisplayName = "Blending"),
+	Mixing UMETA(DisplayName = "Mixing"),
+	Whisking UMETA(DisplayName = "Whisking"),
+	Marinating UMETA(DisplayName = "Marinating"),
+	Curing UMETA(DisplayName = "Curing"),
+	Stuffing UMETA(DisplayName = "Stuffing"),
+	Tenderizing UMETA(DisplayName = "Tenderizing"),
+	Shredding UMETA(DisplayName = "Shredding"),
+	Crushing UMETA(DisplayName = "Crushing"),
+	Juicing UMETA(DisplayName = "Juicing"),
+	Pureeing UMETA(DisplayName = "Pureeing")
+};
+
+// Cooking methods
+UENUM(BlueprintType)
+enum class ECookingMethods : uint8
+{
 	Fried UMETA(DisplayName = "Fried"),
 	Boiled UMETA(DisplayName = "Boiled"),
 	Baked UMETA(DisplayName = "Baked"),
@@ -99,7 +121,7 @@ enum class EFoodPrepMethods : uint8
 	Roasted UMETA(DisplayName = "Roasted"),
 	Poached UMETA(DisplayName = "Poached"),
 	Sauteed UMETA(DisplayName = "Sauteed"),
-	Blanch UMETA(DisplayName = "Blanch")
+	Blanched UMETA(DisplayName = "Blanched")
 };
 
 USTRUCT(BlueprintType)
@@ -223,8 +245,9 @@ public:
 	// Override PostEditChangeProperty
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName Name;
+	FName DisplayName;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName FileName;
@@ -249,9 +272,6 @@ class RESTAURANTMANAGERSIM_API UFoodDataAsset : public UGameDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName FoodName;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FDateTime CreationTime;
 
@@ -299,13 +319,52 @@ public:
 	TMap<EFoodPrepMethods, bool> IngredientPrepMethods;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<class UPreparedIngredientDataAsset*> IngredientVariants;
+	TArray<class UPreparedIngredientDataAsset*> PreparedVariants;
+	
+	// Seconds it takes to prepare this 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float PrepTime = 50;
 };
 
 UCLASS(BlueprintType)
-class RESTAURANTMANAGERSIM_API UPreparedIngredientDataAsset : public UIngredientDataAsset
+class RESTAURANTMANAGERSIM_API UPreparedIngredientDataAsset : public UFoodDataAsset
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<ECookingMethods, bool> IngredientPrepMethods;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<class UCookedIngredient*> CookedVariants;
+
+	// Seconds it takes to cook this 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float CookingTime = 50;
+};
+
+UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API UCookedIngredientDataAsset : public UFoodDataAsset
+{
+	GENERATED_BODY()
+
+};
+
+// Struct to manage a stage of making a meal e.g. Chicken and chips, would have Cooking Chicken, Cooking Chips
+USTRUCT(BlueprintType)
+struct FMealStage
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UIngredientDataAsset* StartingIngredient;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPreparedIngredientDataAsset* PreparedIngredient;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCookedIngredientDataAsset* CookedIngredient;
 };
 
 UCLASS(BlueprintType)
@@ -315,7 +374,7 @@ class RESTAURANTMANAGERSIM_API UMealDataAsset : public UFoodDataAsset
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UIngredientDataAsset*> Ingredients;
+	TArray<FMealStage> Ingredients;
 };
 
 // Game data class for managing player's money and other game-specific data
@@ -335,5 +394,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Money")
 	float PlayersMoney = 10000.0;
-
 };
