@@ -30,8 +30,5 @@ const FString& FActorCategory::GetSubCategory() const
 
 void UGameDataAsset::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-	if (PropertyChangedEvent.GetPropertyName() == GET_MEMBER_NAME_CHECKED(UGameDataAsset, Name))
-	{
-		FileName = FName(Name.ToString().Replace(TEXT(" "), TEXT("")));
-	}
+	FileName = FName("DA" + Name.ToString().Replace(TEXT(" "), TEXT("")));
 }
