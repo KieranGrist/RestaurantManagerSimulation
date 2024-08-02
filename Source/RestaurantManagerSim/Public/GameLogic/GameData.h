@@ -206,13 +206,13 @@ public:
 	}
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = ActorCategory)
 	FString FullCategory;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = ActorCategory)
 	FString MainCategory;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = ActorCategory)
 	FString SubCategory;
 };
 
@@ -224,11 +224,11 @@ struct FEditorModeActorBase
 
 public:
 	// The actual spawn class 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorModeActor)
 	TSubclassOf<class AInteractableActorBase> ActorSpawnClass;
 
 	// Instead of having 50 versions of wall blueprints, we use data assets which are less taxing 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorModeActor)
 	TArray<UGameDataAsset*> GameDataArray;
 };
 
@@ -240,7 +240,7 @@ struct FEditorModeActors
 
 public:
 	// Map of actor categories to their corresponding base properties
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorModeActors))
 	TMap<FString, FEditorModeActorBase> MappedClasses;
 };
 
@@ -256,22 +256,22 @@ public:
 	void CreateFileName();
 #endif
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
 	FName DisplayName;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
 	FName FileName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
 	UTexture2D* UITexture;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
 	UMaterial* MeshMaterial;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
 	UStaticMesh* Mesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
 	float Cost;
 };
 
@@ -282,10 +282,10 @@ class RESTAURANTMANAGERSIM_API UFoodDataAsset : public UGameDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodData)
 	FDateTime CreationTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodData)
 	float Quality;
 };
 
@@ -326,28 +326,29 @@ class RESTAURANTMANAGERSIM_API UIngredientDataAsset : public UFoodDataAsset
 
 public:
 	UIngredientDataAsset();
+
 #if WITH_EDITOR
-	UFUNCTION(CallInEditor)
+	UFUNCTION(CallInEditor, Category = IngredientData)
 	void CreatePreparedVariants();
 #endif
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
 	TMap<EFoodPrepMethods, bool> IngredientPrepMethods;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
 	TMap <EFoodPrepMethods,class UPreparedIngredientDataAsset*> PreparedVariants;
 	
 	// Seconds it takes to prepare this 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
 	float PrepTime = 50;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
 	EIngredientState IngredientState;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
 	float MiniumStorageTemperature = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
 	float MaxiumStorageTemperature = 10;
 };
 
@@ -357,16 +358,19 @@ class RESTAURANTMANAGERSIM_API UPreparedIngredientDataAsset : public UFoodDataAs
 	GENERATED_BODY()
 
 public:
+#if WITH_EDITOR
+	UFUNCTION(CallInEditor)
 	UPreparedIngredientDataAsset();
+#endif
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
 	TMap<ECookingMethods, bool> CookingMethods;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
 	TMap<ECookingMethods, class UCookedIngredientDataAsset*> CookedVariants;
 
 	// Seconds it takes to cook this 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
 	float CookingTime = 50;
 };
 
@@ -384,13 +388,13 @@ struct FMealStage
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
 	UIngredientDataAsset* StartingIngredient;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
 	UPreparedIngredientDataAsset* PreparedIngredient;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
 	UCookedIngredientDataAsset* CookedIngredient;
 };
 
@@ -400,7 +404,7 @@ class RESTAURANTMANAGERSIM_API UServingDataAsset : public UFoodDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ServingData)
 	TSubclassOf<class AServingBase> ServingMethod;
 };
 
@@ -411,10 +415,10 @@ class RESTAURANTMANAGERSIM_API UMealDataAsset : public UFoodDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MealData)
 	TArray<FMealStage> Ingredients;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MealData)
 	TArray<UServingDataAsset*> ServingMethods;
 };
 
