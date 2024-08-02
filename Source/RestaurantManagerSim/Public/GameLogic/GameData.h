@@ -240,7 +240,7 @@ struct FEditorModeActors
 
 public:
 	// Map of actor categories to their corresponding base properties
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorModeActors))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorModeActors)
 	TMap<FString, FEditorModeActorBase> MappedClasses;
 };
 
@@ -275,20 +275,6 @@ public:
 	float Cost;
 };
 
-// Derived classes for specific data assets
-UCLASS(BlueprintType)
-class RESTAURANTMANAGERSIM_API UFoodDataAsset : public UGameDataAsset
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodData)
-	FDateTime CreationTime;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodData)
-	float Quality;
-};
-
 UCLASS(BlueprintType)
 class RESTAURANTMANAGERSIM_API UArchitectureDataAsset : public UGameDataAsset
 {
@@ -319,6 +305,24 @@ class RESTAURANTMANAGERSIM_API URestaurantDataAsset : public UGameDataAsset
 	GENERATED_BODY()
 };
 
+// Derived classes for specific data assets
+UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API UFoodDataAsset : public UGameDataAsset
+{
+	GENERATED_BODY()
+
+public:
+	template<typename EnumType>
+	void CreateGameDataMaps(TMap<EnumType, bool>& EnumMap, TMap<EnumType, UGameDataAsset*>& CreatedDataMap, TSubclassOf<UGameDataAsset> GameDataClass, const FString& InPath);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodData)
+	FDateTime CreationTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodData)
+	float Quality;
+
+};
+
 UCLASS(BlueprintType)
 class RESTAURANTMANAGERSIM_API UIngredientDataAsset : public UFoodDataAsset
 {
@@ -336,7 +340,7 @@ public:
 	TMap<EFoodPrepMethods, bool> IngredientPrepMethods;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
-	TMap <EFoodPrepMethods,class UPreparedIngredientDataAsset*> PreparedVariants;
+	TMap <EFoodPrepMethods,class UPreparedIngredientDataAsset*> PreparedVariantDataAssets;
 	
 	// Seconds it takes to prepare this 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
@@ -359,15 +363,17 @@ class RESTAURANTMANAGERSIM_API UPreparedIngredientDataAsset : public UFoodDataAs
 
 public:
 #if WITH_EDITOR
-	UFUNCTION(CallInEditor)
 	UPreparedIngredientDataAsset();
+
+	UFUNCTION(CallInEditor, Category = IngredientData)
+	void CreateCookedVariants();
 #endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
 	TMap<ECookingMethods, bool> CookingMethods;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
-	TMap<ECookingMethods, class UCookedIngredientDataAsset*> CookedVariants;
+	TMap<ECookingMethods, class UCookedIngredientDataAsset*> CookedIngredientDataAssets;
 
 	// Seconds it takes to cook this 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
@@ -440,3 +446,4 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Money")
 	float PlayersMoney = 10000.0;
 };
+
