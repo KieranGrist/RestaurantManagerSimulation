@@ -333,14 +333,14 @@ public:
 
 #if WITH_EDITOR
 	UFUNCTION(CallInEditor, Category = IngredientData)
-	void CreatePreparedVariants();
+	void CreatePreparedIngredientDataAssets();
 #endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
 	TMap<EFoodPrepMethods, bool> IngredientPrepMethods;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
-	TMap <EFoodPrepMethods,class UPreparedIngredientDataAsset*> PreparedVariantDataAssets;
+	TMap <EFoodPrepMethods,class UPreparedIngredientDataAsset*> PreparedIngredientDataAssets;
 	
 	// Seconds it takes to prepare this 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
@@ -366,7 +366,7 @@ public:
 	UPreparedIngredientDataAsset();
 
 	UFUNCTION(CallInEditor, Category = IngredientData)
-	void CreateCookedVariants();
+	void CreateCookedIngredientDataAssets();
 #endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
