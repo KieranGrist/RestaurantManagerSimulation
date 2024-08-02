@@ -30,12 +30,6 @@ protected:
 	UStaticMeshComponent* ActorMesh = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float PurchaseCost;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FName ActorName;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UGameDataAsset* ActorData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

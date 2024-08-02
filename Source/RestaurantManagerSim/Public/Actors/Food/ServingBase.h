@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Food/FoodBase.h"
-#include "PlateBase.generated.h"
+#include "ServingBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RESTAURANTMANAGERSIM_API APlateBase : public AFoodBase
+class RESTAURANTMANAGERSIM_API AServingBase : public AFoodBase
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	APlateBase();
+	AServingBase();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

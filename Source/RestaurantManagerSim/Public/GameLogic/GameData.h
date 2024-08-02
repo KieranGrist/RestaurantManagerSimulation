@@ -87,6 +87,15 @@ enum class ERestaurantSubCategory : uint8
 
 // Food preparation methods
 UENUM(BlueprintType)
+enum class EIngredientState : uint8
+{
+	Liquid,
+	Gas,
+	Solid
+};
+
+// Food preparation methods
+UENUM(BlueprintType)
 enum class EFoodPrepMethods : uint8
 {
 	Dicing UMETA(DisplayName = "Dicing"),
@@ -244,6 +253,7 @@ public:
 #if WITH_EDITOR
 	// Override PostEditChangeProperty
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+	void CreateFileName();
 #endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -315,15 +325,30 @@ class RESTAURANTMANAGERSIM_API UIngredientDataAsset : public UFoodDataAsset
 	GENERATED_BODY()
 
 public:
+	UIngredientDataAsset();
+#if WITH_EDITOR
+	UFUNCTION(CallInEditor)
+	void CreatePreparedVariants();
+#endif
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<EFoodPrepMethods, bool> IngredientPrepMethods;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<class UPreparedIngredientDataAsset*> PreparedVariants;
+	TMap <EFoodPrepMethods,class UPreparedIngredientDataAsset*> PreparedVariants;
 	
 	// Seconds it takes to prepare this 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float PrepTime = 50;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EIngredientState IngredientState;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MiniumStorageTemperature = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxiumStorageTemperature = 10;
 };
 
 UCLASS(BlueprintType)
@@ -332,11 +357,13 @@ class RESTAURANTMANAGERSIM_API UPreparedIngredientDataAsset : public UFoodDataAs
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TMap<ECookingMethods, bool> IngredientPrepMethods;
+	UPreparedIngredientDataAsset();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<class UCookedIngredient*> CookedVariants;
+	TMap<ECookingMethods, bool> CookingMethods;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TMap<ECookingMethods, class UCookedIngredientDataAsset*> CookedVariants;
 
 	// Seconds it takes to cook this 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -368,6 +395,17 @@ public:
 };
 
 UCLASS(BlueprintType)
+class RESTAURANTMANAGERSIM_API UServingDataAsset : public UFoodDataAsset
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class AServingBase> ServingMethod;
+};
+
+
+UCLASS(BlueprintType)
 class RESTAURANTMANAGERSIM_API UMealDataAsset : public UFoodDataAsset
 {
 	GENERATED_BODY()
@@ -375,6 +413,9 @@ class RESTAURANTMANAGERSIM_API UMealDataAsset : public UFoodDataAsset
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FMealStage> Ingredients;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<UServingDataAsset*> ServingMethods;
 };
 
 // Game data class for managing player's money and other game-specific data
