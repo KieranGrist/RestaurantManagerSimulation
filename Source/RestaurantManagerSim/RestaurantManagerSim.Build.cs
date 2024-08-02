@@ -14,7 +14,7 @@ public class RestaurantManagerSim : ModuleRules
             "Engine",
             "InputCore",
             "EnhancedInput",
-            // Add editor-only modules conditionally
+            "EditorScriptingUtilities"
         });
 
         // Private dependencies that are only used by this module

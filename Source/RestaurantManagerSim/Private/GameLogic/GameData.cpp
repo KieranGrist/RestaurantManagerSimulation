@@ -88,19 +88,19 @@ UIngredientDataAsset::UIngredientDataAsset()
 void UIngredientDataAsset::CreatePreparedVariants()
 {
     // Remove obsolete variants
-    TSet<EFoodPrepMethods> currentPrepMethods;
+    TSet<EFoodPrepMethods> current_prep_methods;
     for (const auto& ingredient_pair : IngredientPrepMethods)
     {
         if (ingredient_pair.Value)
         {
-            currentPrepMethods.Add(ingredient_pair.Key);
+            current_prep_methods.Add(ingredient_pair.Key);
         }
     }
 
     TArray<UPreparedIngredientDataAsset*> assetsToRemove;
     for (const auto& prepared_variant_pair : PreparedVariants)
     {
-        if (!currentPrepMethods.Contains(prepared_variant_pair.Key))
+        if (!current_prep_methods.Contains(prepared_variant_pair.Key))
         {
             assetsToRemove.Add(prepared_variant_pair.Value);
         }
@@ -109,8 +109,8 @@ void UIngredientDataAsset::CreatePreparedVariants()
     for (UPreparedIngredientDataAsset* asset : assetsToRemove)
     {
         // Remove the asset from disk
-        FString assetPath = FAssetRegistryModule::AssetNameToPath(asset->GetName());
-        UEditorAssetLibrary (assetPath);
+        FString asset_path = FAssetRegistryModule::AssetNameToPath(asset->GetName());
+        UEditorAssetLibrary (asset_path);
         PreparedVariants.Remove(asset->GetName());
     }
 
