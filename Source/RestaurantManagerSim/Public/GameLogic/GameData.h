@@ -254,6 +254,7 @@ public:
 	// Override PostEditChangeProperty
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 	void CreateFileName();
+	static FName FormatDisplayNameToFileName(FName InDisplayName);
 #endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
@@ -340,7 +341,7 @@ public:
 	TMap<EFoodPrepMethods, bool> IngredientPrepMethods;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
-	TMap <EFoodPrepMethods,class UPreparedIngredientDataAsset*> PreparedIngredientDataAssets;
+	TMap <EFoodPrepMethods, UGameDataAsset*> PreparedIngredientDataAssets;
 	
 	// Seconds it takes to prepare this 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
@@ -373,7 +374,7 @@ public:
 	TMap<ECookingMethods, bool> CookingMethods;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
-	TMap<ECookingMethods, class UCookedIngredientDataAsset*> CookedIngredientDataAssets;
+	TMap<ECookingMethods, UGameDataAsset*> CookedIngredientDataAssets;
 
 	// Seconds it takes to cook this 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)

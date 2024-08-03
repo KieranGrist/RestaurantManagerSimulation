@@ -42,7 +42,12 @@ void UGameDataAsset::PostEditChangeProperty(FPropertyChangedEvent& PropertyChang
 
 void UGameDataAsset::CreateFileName()
 {
-    FileName = FName("DA" + DisplayName.ToString().Replace(TEXT(" "), TEXT("")));
+    FileName = FormatDisplayNameToFileName(DisplayName);
+}
+
+FName UGameDataAsset::FormatDisplayNameToFileName(FName InDisplayName)
+{
+    return FName("DA" + InDisplayName.ToString().Replace(TEXT(" "), TEXT("")));
 }
 
 UIngredientDataAsset::UIngredientDataAsset()
@@ -132,37 +137,48 @@ void UFoodDataAsset::CreateGameDataMaps(TMap<EnumType, bool>& EnumMap,TMap<EnumT
         if (CreatedDataMap.Contains(enum_pair.Key))
             continue;
 
-        // Create a new prepared ingredient data asset
-        UGameDataAsset* new_prepared_ingredient = NewObject<UGameDataAsset>(GetTransientPackage(), GameDataClass, NAME_None, RF_Public | RF_Standalone);
+        FString asset_name = FName(DisplayName.ToString() + " " + FActorCategory::EnumToString(enum_pair.Key));
+        FString package_name = InPath + FormatDisplayNameToFileName(asset_name);
+        UPackage* package = CreatePackage(*package_name);
+
+        UGameDataAsset* new_prepared_ingredient = NewObject<UGameDataAsset>(Package, GameDataClass, FName(*asset_name), EObjectFlags::RF_Public | EObjectFlags::RF_Standalone);
 
         // Set the display name
-        new_prepared_ingredient->DisplayName = FName(DisplayName.ToString() + " " + FActorCategory::EnumToString(enum_pair.Key));
+        new_prepared_ingredient->DisplayName = asset_name;
 
         // Set the file name for the asset
         new_prepared_ingredient->CreateFileName();
 
-        // Save the asset to the content browser
-        FString asset_path = FString::Printf(TEXT("%s%s"), *InPath, *new_prepared_ingredient->FileName.ToString());
-        FAssetRegistryModule::AssetCreated(new_prepared_ingredient);
+        // Mark the package dirty so it will get saved
+        Package->MarkPackageDirty();
 
-        // Save package
-        FSavePackageArgs save_args;
-        save_args.TopLevelFlags = RF_Public | RF_Standalone;
-        UPackage::SavePackage(new_prepared_ingredient->GetOutermost(), new_prepared_ingredient, *asset_path, save_args);
+        // Save the package to disk
+        FString FilePath = FPackageName::LongPackageNameToFilename(package_name, FPackageName::GetAssetPackageExtension());
+        bool package_saved = UPackage::SavePackage(Package, NewDataAsset, EObjectFlags::RF_Public | EObjectFlags::RF_Standalone, *FilePath, GError, nullptr, true, true, SAVE_NoError);
+
+        if (package_saved)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Successfully created asset: %s"), *asset_name);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("Failed to create asset: %s"), *asset_name);
+        }
 
         // Add the new prepared ingredient to the map
         CreatedDataMap.Add(enum_pair.Key, new_prepared_ingredient);
+        FAssetRegistryModule::AssetCreated(new_prepared_ingredient);
     }
 }
 
 // Create prepared variants
 void UIngredientDataAsset::CreatePreparedIngredientDataAssets()
 {
-    CreateGameDataMaps(IngredientPrepMethods, PreparedIngredientDataAssets, UPreparedIngredientDataAsset::StaticClass(), TEXT("/Game/Content/Data/Food/Ingredient/PreparedIngredient/%s"));
+    CreateGameDataMaps(IngredientPrepMethods, PreparedIngredientDataAssets, UPreparedIngredientDataAsset::StaticClass(), TEXT("/Game/Content/Data/Food/Ingredient/PreparedIngredient/"));
 }
 
 void UPreparedIngredientDataAsset::CreateCookedIngredientDataAssets()
 {
-    CreateGameDataMaps<ECookingMethods>(CookingMethods, CookedIngredientDataAssets, UCookedIngredientDataAsset::StaticClass(), TEXT("/Game/Content/Data/Food/Ingredient/CookedIngredient/%s"));
+    CreateGameDataMaps(CookingMethods, CookedIngredientDataAssets, UCookedIngredientDataAsset::StaticClass(), TEXT("/Game/Content/Data/Food/Ingredient/CookedIngredient/"));
 }
 
