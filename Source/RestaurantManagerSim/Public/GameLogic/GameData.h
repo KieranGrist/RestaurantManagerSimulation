@@ -98,23 +98,11 @@ enum class EIngredientState : uint8
 UENUM(BlueprintType)
 enum class EFoodPrepMethods : uint8
 {
-	Dicing UMETA(DisplayName = "Dicing"),
-	Slicing UMETA(DisplayName = "Slicing"),
-	Chopping UMETA(DisplayName = "Chopping"),
-	Grating UMETA(DisplayName = "Grating"),
-	Peeling UMETA(DisplayName = "Peeling"),
-	Mincing UMETA(DisplayName = "Mincing"),
-	Blending UMETA(DisplayName = "Blending"),
-	Mixing UMETA(DisplayName = "Mixing"),
-	Whisking UMETA(DisplayName = "Whisking"),
-	Marinating UMETA(DisplayName = "Marinating"),
-	Curing UMETA(DisplayName = "Curing"),
-	Stuffing UMETA(DisplayName = "Stuffing"),
-	Tenderizing UMETA(DisplayName = "Tenderizing"),
-	Shredding UMETA(DisplayName = "Shredding"),
-	Crushing UMETA(DisplayName = "Crushing"),
-	Juicing UMETA(DisplayName = "Juicing"),
-	Pureeing UMETA(DisplayName = "Pureeing")
+	Cutting UMETA(DisplayName = "Cutting"),        // Combines Dicing, Chopping, Mincing
+	Slicing UMETA(DisplayName = "Slicing"),        // Combines Slicing and Peeling
+	Grating UMETA(DisplayName = "Grating"),        // Combines Grating and Shredding
+	Blending UMETA(DisplayName = "Blending"),      // Combines Blending, Mixing, Whisking, Pureeing
+	Marinating UMETA(DisplayName = "Marinating")   // Includes Marinating and Tenderizing
 };
 
 // Cooking methods
@@ -125,12 +113,7 @@ enum class ECookingMethods : uint8
 	Boiled UMETA(DisplayName = "Boiled"),
 	Baked UMETA(DisplayName = "Baked"),
 	Grilled UMETA(DisplayName = "Grilled"),
-	Raw UMETA(DisplayName = "Raw"),
-	Steamed UMETA(DisplayName = "Steamed"),
-	Roasted UMETA(DisplayName = "Roasted"),
-	Poached UMETA(DisplayName = "Poached"),
-	Sauteed UMETA(DisplayName = "Sauteed"),
-	Blanched UMETA(DisplayName = "Blanched")
+	Steamed UMETA(DisplayName = "Steamed")       // Includes Steamed, Roasted, and Poached
 };
 
 USTRUCT(BlueprintType)

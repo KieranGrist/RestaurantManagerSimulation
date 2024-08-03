@@ -55,23 +55,11 @@ UIngredientDataAsset::UIngredientDataAsset()
     // Initialize IngredientPrepMethods with default values
     IngredientPrepMethods =
     {
-        {EFoodPrepMethods::Dicing, false},
+        {EFoodPrepMethods::Cutting, false},
         {EFoodPrepMethods::Slicing, false},
-        {EFoodPrepMethods::Chopping, false},
         {EFoodPrepMethods::Grating, false},
-        {EFoodPrepMethods::Peeling, false},
-        {EFoodPrepMethods::Mincing, false},
         {EFoodPrepMethods::Blending, false},
-        {EFoodPrepMethods::Mixing, false},
-        {EFoodPrepMethods::Whisking, false},
-        {EFoodPrepMethods::Marinating, false},
-        {EFoodPrepMethods::Curing, false},
-        {EFoodPrepMethods::Stuffing, false},
-        {EFoodPrepMethods::Tenderizing, false},
-        {EFoodPrepMethods::Shredding, false},
-        {EFoodPrepMethods::Crushing, false},
-        {EFoodPrepMethods::Juicing, false},
-        {EFoodPrepMethods::Pureeing, false}
+        {EFoodPrepMethods::Marinating, false}
     };
 }
 
@@ -83,12 +71,7 @@ UPreparedIngredientDataAsset::UPreparedIngredientDataAsset()
         {ECookingMethods::Boiled, false},
         {ECookingMethods::Baked, false},
         {ECookingMethods::Grilled, false},
-        {ECookingMethods::Raw, false},
-        {ECookingMethods::Steamed, false},
-        {ECookingMethods::Roasted, false},
-        {ECookingMethods::Poached, false},
-        {ECookingMethods::Sauteed, false},
-        {ECookingMethods::Blanched, false}
+        {ECookingMethods::Steamed, false}
     };
 }
 
