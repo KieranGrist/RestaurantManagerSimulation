@@ -37,10 +37,10 @@ const FString& FActorCategory::GetSubCategory() const
 
 void UGameDataAsset::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-    CreateFileName();
+    UpdateFileName();
 }
 
-void UGameDataAsset::CreateFileName()
+void UGameDataAsset::UpdateFileName()
 {
     FileName = FormatDisplayNameToFileName(DisplayName);
 }
@@ -93,7 +93,7 @@ UPreparedIngredientDataAsset::UPreparedIngredientDataAsset()
 }
 
 template<typename EnumType>
-void UFoodDataAsset::CreateGameDataMaps(TMap<EnumType, bool>& EnumMap,TMap<EnumType, UGameDataAsset*>& CreatedDataMap, TSubclassOf<UGameDataAsset> GameDataClass, const FString& InPath)
+void UFoodDataAsset::CreateGameDataMaps(TMap<EnumType, bool>& EnumMap,TMap<EnumType, UGameDataAsset*>& CreatedDataMap, TSubclassOf<UGameDataAsset> InGameDataClass, const FString& InPath)
 {
     static_assert(TIsEnum<EnumType>::Value, "Only enum types are allowed");
 
@@ -137,48 +137,73 @@ void UFoodDataAsset::CreateGameDataMaps(TMap<EnumType, bool>& EnumMap,TMap<EnumT
         if (CreatedDataMap.Contains(enum_pair.Key))
             continue;
 
-        FName asset_name = FName(DisplayName.ToString() + " " + FActorCategory::EnumToString(enum_pair.Key));
-        FName package_name = FName(InPath + FormatDisplayNameToFileName(asset_name).ToString());
-        UPackage* package = CreatePackage(*package_name);
-
-        UGameDataAsset* new_prepared_ingredient = NewObject<UGameDataAsset>(package, GameDataClass, asset_name, EObjectFlags::RF_Public | EObjectFlags::RF_Standalone);
-
-        // Set the display name
-        new_prepared_ingredient->DisplayName = asset_name;
-
-        // Set the file name for the asset
-        new_prepared_ingredient->CreateFileName();
-
-        // Mark the package dirty so it will get saved
-        package->MarkPackageDirty();
-
-        // Save the package to disk
-        FString FilePath = FPackageName::LongPackageNameToFilename(package_name, FPackageName::GetAssetPackageExtension());
-        bool package_saved = UPackage::SavePackage(package, new_prepared_ingredient, EObjectFlags::RF_Public | EObjectFlags::RF_Standalone, *FilePath, GError, nullptr, true, true, SAVE_NoError);
-
-        if (package_saved)
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Successfully created asset: %s"), *asset_name);
-        }
-        else
-        {
-            UE_LOG(LogTemp, Error, TEXT("Failed to create asset: %s"), *asset_name);
-        }
-
-        // Add the new prepared ingredient to the map
-        CreatedDataMap.Add(enum_pair.Key, new_prepared_ingredient);
-        FAssetRegistryModule::AssetCreated(new_prepared_ingredient);
+        CreatedDataMap.Add(enum_pair.Key, CreateDataAsset(FName(DisplayName.ToString() + " " + FActorCategory::EnumToString(enum_pair.Key)), InPath, InGameDataClass));
     }
+}
+
+// Define the factory function
+UGameDataAsset* UGameDataAsset::CreateDataAsset(FString InAssetName, FString InAssetPath, TSubclassOf<UGameDataAsset> InGameDataClass)
+{
+    // Get the Asset Tools module
+    FAssetToolsModule& AssetToolsModule = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools");
+    IAssetTools& AssetTools = AssetToolsModule.Get();
+
+    FString PackageName = InAssetPath + "/" + InAssetName;
+
+    // Create a new Data Asset package
+    UPackage* Package = CreatePackage(*PackageName);
+    if (!Package)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Failed to create package for %s"), *InAssetName);
+        return nullptr;
+    }
+
+    // Create the Data Asset
+    UGameDataAsset* NewDataAsset = NewObject<UGameDataAsset>(Package, InGameDataClass, FName(*InAssetName), RF_Public | RF_Standalone);
+    if (!NewDataAsset)
+    {
+        UE_LOG(LogTemp, Error, TEXT("Failed to create data asset %s"), *InAssetName);
+        return nullptr;
+    }
+
+    // Mark the package as dirty so it gets saved
+    Package->MarkPackageDirty();
+
+    // Save the package using FSavePackageArgs
+    FString PackageFileName = FPackageName::LongPackageNameToFilename(PackageName, FPackageName::GetAssetPackageExtension());
+
+    FSavePackageArgs SaveArgs;
+    SaveArgs.TopLevelFlags = EObjectFlags::RF_Public | EObjectFlags::RF_Standalone;
+    SaveArgs.Error = GError;
+    SaveArgs.bForceByteSwapping = false;
+    SaveArgs.bWarnOfLongFilename = true;
+    SaveArgs.bSlowTask = true;
+    SaveArgs.bConcurrentSave = true;
+
+    if (!UPackage::Save(Package, NewDataAsset, *PackageFileName, SaveArgs))
+    {
+        UE_LOG(LogTemp, Error, TEXT("Failed to save package %s"), *PackageFileName);
+        return nullptr;
+    }
+
+    // Notify the editor about the new asset
+    FAssetRegistryModule::AssetCreated(NewDataAsset);
+
+    // Set additional properties if needed
+    NewDataAsset->DisplayName = FName(*InAssetName);
+    NewDataAsset->UpdateFileName();
+
+    return NewDataAsset;
 }
 
 // Create prepared variants
 void UIngredientDataAsset::CreatePreparedIngredientDataAssets()
 {
-    CreateGameDataMaps(IngredientPrepMethods, PreparedIngredientDataAssets, UPreparedIngredientDataAsset::StaticClass(), TEXT("/Game/Content/Data/Food/Ingredient/PreparedIngredient/"));
+    CreateGameDataMaps(IngredientPrepMethods, PreparedIngredientDataAssets, UPreparedIngredientDataAsset::StaticClass(), FString("/Game/Content/Data/Food/Ingredient/PreparedIngredient/"));
 }
 
 void UPreparedIngredientDataAsset::CreateCookedIngredientDataAssets()
 {
-    CreateGameDataMaps(CookingMethods, CookedIngredientDataAssets, UCookedIngredientDataAsset::StaticClass(), TEXT("/Game/Content/Data/Food/Ingredient/CookedIngredient/"));
+    CreateGameDataMaps(CookingMethods, CookedIngredientDataAssets, UCookedIngredientDataAsset::StaticClass(), FString("/Game/Content/Data/Food/Ingredient/CookedIngredient/"));
 }
 
