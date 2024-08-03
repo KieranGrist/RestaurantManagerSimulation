@@ -137,7 +137,7 @@ void UFoodDataAsset::CreateGameDataMaps(TMap<EnumType, bool>& EnumMap,TMap<EnumT
         if (CreatedDataMap.Contains(enum_pair.Key))
             continue;
 
-        CreatedDataMap.Add(enum_pair.Key, CreateDataAsset(FName(DisplayName.ToString() + " " + FActorCategory::EnumToString(enum_pair.Key)), InPath, InGameDataClass));
+        CreatedDataMap.Add(enum_pair.Key, CreateDataAsset(DisplayName.ToString() + " " + FActorCategory::EnumToString(enum_pair.Key), InPath, InGameDataClass));
     }
 }
 
@@ -178,9 +178,9 @@ UGameDataAsset* UGameDataAsset::CreateDataAsset(FString InAssetName, FString InA
     SaveArgs.bForceByteSwapping = false;
     SaveArgs.bWarnOfLongFilename = true;
     SaveArgs.bSlowTask = true;
-    SaveArgs.bConcurrentSave = true;
+    //SaveArgs.bConcurrentSave = true;
 
-    if (!UPackage::Save(Package, NewDataAsset, *PackageFileName, SaveArgs))
+    if (!UPackage::Save(Package, NewDataAsset, *PackageFileName, SaveArgs).IsSuccessful())
     {
         UE_LOG(LogTemp, Error, TEXT("Failed to save package %s"), *PackageFileName);
         return nullptr;
