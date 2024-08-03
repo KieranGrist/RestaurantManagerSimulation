@@ -137,11 +137,11 @@ void UFoodDataAsset::CreateGameDataMaps(TMap<EnumType, bool>& EnumMap,TMap<EnumT
         if (CreatedDataMap.Contains(enum_pair.Key))
             continue;
 
-        FString asset_name = FName(DisplayName.ToString() + " " + FActorCategory::EnumToString(enum_pair.Key));
-        FString package_name = InPath + FormatDisplayNameToFileName(asset_name);
+        FName asset_name = FName(DisplayName.ToString() + " " + FActorCategory::EnumToString(enum_pair.Key));
+        FName package_name = FName(InPath + FormatDisplayNameToFileName(asset_name).ToString());
         UPackage* package = CreatePackage(*package_name);
 
-        UGameDataAsset* new_prepared_ingredient = NewObject<UGameDataAsset>(Package, GameDataClass, FName(*asset_name), EObjectFlags::RF_Public | EObjectFlags::RF_Standalone);
+        UGameDataAsset* new_prepared_ingredient = NewObject<UGameDataAsset>(package, GameDataClass, asset_name, EObjectFlags::RF_Public | EObjectFlags::RF_Standalone);
 
         // Set the display name
         new_prepared_ingredient->DisplayName = asset_name;
@@ -150,11 +150,11 @@ void UFoodDataAsset::CreateGameDataMaps(TMap<EnumType, bool>& EnumMap,TMap<EnumT
         new_prepared_ingredient->CreateFileName();
 
         // Mark the package dirty so it will get saved
-        Package->MarkPackageDirty();
+        package->MarkPackageDirty();
 
         // Save the package to disk
         FString FilePath = FPackageName::LongPackageNameToFilename(package_name, FPackageName::GetAssetPackageExtension());
-        bool package_saved = UPackage::SavePackage(Package, NewDataAsset, EObjectFlags::RF_Public | EObjectFlags::RF_Standalone, *FilePath, GError, nullptr, true, true, SAVE_NoError);
+        bool package_saved = UPackage::SavePackage(package, new_prepared_ingredient, EObjectFlags::RF_Public | EObjectFlags::RF_Standalone, *FilePath, GError, nullptr, true, true, SAVE_NoError);
 
         if (package_saved)
         {
