@@ -125,13 +125,13 @@ void UFoodDataAsset::CreateGameDataMaps(TMap<EnumType, bool>& EnumMap,TMap<EnumT
 }
 
 // Define the factory function
-UGameDataAsset* UGameDataAsset::CreateDataAsset(FString InAssetName, FString InAssetPath, TSubclassOf<UGameDataAsset> InGameDataClass)
+UGameDataAsset* UGameDataAsset::CreateDataAsset(const FString& InAssetName, const FString& InAssetPath, TSubclassOf<UGameDataAsset> InGameDataClass)
 {
     // Get the Asset Tools module
     FAssetToolsModule& AssetToolsModule = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools");
     IAssetTools& AssetTools = AssetToolsModule.Get();
 
-    FString PackageName = InAssetPath + "/" + InAssetName;
+    FString PackageName = InAssetPath + "/" + FormatDisplayNameToFileName(InAssetName);
 
     // Create a new Data Asset package
     UPackage* Package = CreatePackage(*PackageName);
@@ -182,11 +182,11 @@ UGameDataAsset* UGameDataAsset::CreateDataAsset(FString InAssetName, FString InA
 // Create prepared variants
 void UIngredientDataAsset::CreatePreparedIngredientDataAssets()
 {
-    CreateGameDataMaps(IngredientPrepMethods, PreparedIngredientDataAssets, UPreparedIngredientDataAsset::StaticClass(), FString("/Game/Content/Data/Food/Ingredient/PreparedIngredient/"));
+    CreateGameDataMaps(IngredientPrepMethods, PreparedIngredientDataAssets, UPreparedIngredientDataAsset::StaticClass(), FString("/Game/Data/Food/Ingredient/PreparedIngredient"));
 }
 
 void UPreparedIngredientDataAsset::CreateCookedIngredientDataAssets()
 {
-    CreateGameDataMaps(CookingMethods, CookedIngredientDataAssets, UCookedIngredientDataAsset::StaticClass(), FString("/Game/Content/Data/Food/Ingredient/CookedIngredient/"));
+    CreateGameDataMaps(CookingMethods, CookedIngredientDataAssets, UCookedIngredientDataAsset::StaticClass(), FString("/Game/Data/Food/Ingredient/CookedIngredient"));
 }
 

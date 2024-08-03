@@ -238,7 +238,7 @@ public:
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 	void UpdateFileName();
 	static FName FormatDisplayNameToFileName(FName InDisplayName);
-	UGameDataAsset* CreateDataAsset(FString AssetName, FString AssetPath, TSubclassOf<UGameDataAsset> GameDataClass);
+	UGameDataAsset* CreateDataAsset(const FString& AssetName, const FString& AssetPath, TSubclassOf<UGameDataAsset> GameDataClass);
 #endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
