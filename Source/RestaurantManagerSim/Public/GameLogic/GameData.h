@@ -325,7 +325,7 @@ public:
 	TMap<EFoodPrepMethods, bool> IngredientPrepMethods;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
-	TMap <EFoodPrepMethods, UGameDataAsset*> PreparedIngredientDataAssets;
+	TMap<EFoodPrepMethods, UGameDataAsset*> PreparedIngredientDataAssets;
 	
 	// Seconds it takes to prepare this 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
