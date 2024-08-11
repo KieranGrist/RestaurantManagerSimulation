@@ -55,11 +55,11 @@ UIngredientDataAsset::UIngredientDataAsset()
 	// Initialize IngredientPrepMethods with default values
 	IngredientPrepMethods =
 	{
-		{EFoodPrepMethods::Cuts, false},
-		{EFoodPrepMethods::Sliced, false},
-		{EFoodPrepMethods::Grated, false},
-		{EFoodPrepMethods::Blended, false},
-		{EFoodPrepMethods::Marinated, false}
+		{EFoodPrepMethods::Cutting, false},
+		{EFoodPrepMethods::Slicing, false},
+		{EFoodPrepMethods::Grating, false},
+		{EFoodPrepMethods::Blending, false},
+		{EFoodPrepMethods::Marinating, false}
 	};
 }
 

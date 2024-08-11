@@ -98,11 +98,11 @@ enum class EIngredientState : uint8
 UENUM(BlueprintType)
 enum class EFoodPrepMethods : uint8
 {
-	Cuts UMETA(DisplayName = "Cuts"),        // Combines Dicing, Chopping, Mincing
-	Sliced UMETA(DisplayName = "Sliced"),        // Combines Sliced and Peeling
-	Grated UMETA(DisplayName = "Grated"),        // Combines Grated and Shredding
-	Blended UMETA(DisplayName = "Blended"),      // Combines Blended, Mixing, Whisking, Pureeing
-	Marinated UMETA(DisplayName = "Marinated")   // Includes Marinated and Tenderizing
+	Cutting UMETA(DisplayName = "Cutting"),        // Combines Dicing, Chopping, Mincing
+	Slicing UMETA(DisplayName = "Slicing"),        // Combines Slicing and Peeling
+	Grating UMETA(DisplayName = "Grating"),        // Combines Grating and Shredding
+	Blending UMETA(DisplayName = "Blending"),      // Combines Blending, Mixing, Whisking, Pureeing
+	Marinating UMETA(DisplayName = "Marinating")   // Includes Marinating and Tenderizing
 };
 
 // Cooking methods
