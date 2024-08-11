@@ -55,11 +55,11 @@ UIngredientDataAsset::UIngredientDataAsset()
 	// Initialize IngredientPrepMethods with default values
 	IngredientPrepMethods =
 	{
-		{EFoodPrepMethods::Cutting, false},
-		{EFoodPrepMethods::Slicing, false},
-		{EFoodPrepMethods::Grating, false},
-		{EFoodPrepMethods::Blending, false},
-		{EFoodPrepMethods::Marinating, false}
+		{EFoodPrepMethods::Cuts, false},
+		{EFoodPrepMethods::Sliced, false},
+		{EFoodPrepMethods::Grated, false},
+		{EFoodPrepMethods::Blended, false},
+		{EFoodPrepMethods::Marinated, false}
 	};
 }
 
@@ -182,11 +182,11 @@ UGameDataAsset* UGameDataAsset::CreateDataAsset(const FString& InAssetName, cons
 // Create prepared variants
 void UIngredientDataAsset::CreatePreparedIngredientDataAssets()
 {
-	CreateGameDataMaps(IngredientPrepMethods, PreparedIngredientDataAssets, UPreparedIngredientDataAsset::StaticClass(), FString("/Game/Data/Food/PreparedIngredient"));
+	CreateGameDataMaps(IngredientPrepMethods, PreparedIngredientDataAssets, UPreparedIngredientDataAsset::StaticClass(), FString("/Game/Data/Food/PreparedIngredients"));
 }
 
 void UPreparedIngredientDataAsset::CreateCookedIngredientDataAssets()
 {
-	CreateGameDataMaps(CookingMethods, CookedIngredientDataAssets, UCookedIngredientDataAsset::StaticClass(), FString("/Game/Data/Food/CookedIngredient"));
+	CreateGameDataMaps(CookingMethods, CookedIngredientDataAssets, UCookedIngredientDataAsset::StaticClass(), FString("/Game/Data/Food/CookedIngredients"));
 }
 

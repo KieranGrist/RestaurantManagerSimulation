@@ -98,11 +98,11 @@ enum class EIngredientState : uint8
 UENUM(BlueprintType)
 enum class EFoodPrepMethods : uint8
 {
-	Cutting UMETA(DisplayName = "Cutting"),        // Combines Dicing, Chopping, Mincing
-	Slicing UMETA(DisplayName = "Slicing"),        // Combines Slicing and Peeling
-	Grating UMETA(DisplayName = "Grating"),        // Combines Grating and Shredding
-	Blending UMETA(DisplayName = "Blending"),      // Combines Blending, Mixing, Whisking, Pureeing
-	Marinating UMETA(DisplayName = "Marinating")   // Includes Marinating and Tenderizing
+	Cuts UMETA(DisplayName = "Cuts"),        // Combines Dicing, Chopping, Mincing
+	Sliced UMETA(DisplayName = "Sliced"),        // Combines Sliced and Peeling
+	Grated UMETA(DisplayName = "Grated"),        // Combines Grated and Shredding
+	Blended UMETA(DisplayName = "Blended"),      // Combines Blended, Mixing, Whisking, Pureeing
+	Marinated UMETA(DisplayName = "Marinated")   // Includes Marinated and Tenderizing
 };
 
 // Cooking methods
@@ -236,8 +236,11 @@ public:
 #if WITH_EDITOR
 	// Override PostEditChangeProperty
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+
 	void UpdateFileName();
+
 	static FName FormatDisplayNameToFileName(FName InDisplayName);
+
 	UGameDataAsset* CreateDataAsset(const FString& AssetName, const FString& AssetPath, TSubclassOf<UGameDataAsset> GameDataClass);
 #endif
 
