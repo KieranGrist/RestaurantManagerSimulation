@@ -131,7 +131,7 @@ UGameDataAsset* UGameDataAsset::CreateDataAsset(const FString& InAssetName, cons
     FAssetToolsModule& AssetToolsModule = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools");
     IAssetTools& AssetTools = AssetToolsModule.Get();
 
-    FString PackageName = InAssetPath + "/" + FormatDisplayNameToFileName(InAssetName);
+    FString PackageName = InAssetPath + "/" + FormatDisplayNameToFileName(FName(InAssetName)).ToString();
 
     // Create a new Data Asset package
     UPackage* Package = CreatePackage(*PackageName);
