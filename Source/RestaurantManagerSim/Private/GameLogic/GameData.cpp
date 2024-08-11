@@ -131,21 +131,22 @@ UGameDataAsset* UGameDataAsset::CreateDataAsset(const FString& InAssetName, cons
 	FAssetToolsModule& AssetToolsModule = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools");
 	IAssetTools& AssetTools = AssetToolsModule.Get();
 
-	FString PackageName = InAssetPath + "/" + FormatDisplayNameToFileName(FName(InAssetName)).ToString();
+	FString AssetNameSanitised = FormatDisplayNameToFileName(FName(InAssetName)).ToString();
+	FString PackageName = InAssetPath + "/" + AssetNameSanitised;
 
 	// Create a new Data Asset package
 	UPackage* Package = CreatePackage(*PackageName);
 	if (!Package)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to create package for %s"), *InAssetName);
+		UE_LOG(LogTemp, Error, TEXT("Failed to create package for %s"), *AssetNameSanitised);
 		return nullptr;
 	}
 
 	// Create the Data Asset
-	UGameDataAsset* NewDataAsset = NewObject<UGameDataAsset>(Package, InGameDataClass, FName(*InAssetName), RF_Public | RF_Standalone);
+	UGameDataAsset* NewDataAsset = NewObject<UGameDataAsset>(Package, InGameDataClass, FName(*AssetNameSanitised), RF_Public | RF_Standalone);
 	if (!NewDataAsset)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to create data asset %s"), *InAssetName);
+		UE_LOG(LogTemp, Error, TEXT("Failed to create data asset %s"), *AssetNameSanitised);
 		return nullptr;
 	}
 
@@ -173,7 +174,7 @@ UGameDataAsset* UGameDataAsset::CreateDataAsset(const FString& InAssetName, cons
 	FAssetRegistryModule::AssetCreated(NewDataAsset);
 
 	// Set additional properties if needed
-	NewDataAsset->DisplayName = FName(*InAssetName);
+	NewDataAsset->DisplayName = FName(InAssetName);
 	NewDataAsset->UpdateFileName();
 
 	return NewDataAsset;
