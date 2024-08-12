@@ -27,12 +27,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UFUNCTION(CallInEditor, Category = EditorMode)
-	void CreateEditorModeActorsMap();
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorMode)
-	TArray<TSubclassOf<class AInteractableActorBase>> EditorModeBPActors;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorMode)
-	TMap<FActorCategory, FEditorModeActors> EditorModeActorsMap;
+	UEditorModeDataAsset* EditorModeData;
 };

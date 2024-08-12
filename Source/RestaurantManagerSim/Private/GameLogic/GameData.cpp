@@ -8,46 +8,54 @@
 #include "Misc/PackageName.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "UObject/SavePackage.h"
+#include "Actors/InteractableActorBase.h"
 
+UGameData::UGameData()
+{
+}
 
 void UGameData::AddMoney(float InAddend)
 {
-    PlayersMoney += InAddend;
+	PlayersMoney += InAddend;
 }
 
 const float& UGameData::GetCurrentMoney() const
 {
-    return PlayersMoney;
+	return PlayersMoney;
 }
 
 const FString& FActorCategory::GetFullCategory() const
 {
-    return FullCategory;
+	return FullCategory;
 }
 
 const FString& FActorCategory::GetMainCategory() const
 {
-    return MainCategory;
+	return MainCategory;
 }
 
 const FString& FActorCategory::GetSubCategory() const
 {
-    return SubCategory;
+	return SubCategory;
+}
+
+UGameDataAsset::UGameDataAsset()
+{
 }
 
 void UGameDataAsset::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-    UpdateFileName();
+	UpdateFileName();
 }
 
 void UGameDataAsset::UpdateFileName()
 {
-    FileName = FormatDisplayNameToFileName(DisplayName);
+	FileName = FormatDisplayNameToFileName(DisplayName);
 }
 
 FName UGameDataAsset::FormatDisplayNameToFileName(FName InDisplayName)
 {
-    return FName("DA" + InDisplayName.ToString().Replace(TEXT(" "), TEXT("")));
+	return FName("DA" + InDisplayName.ToString().Replace(TEXT(" "), TEXT("")));
 }
 
 UIngredientDataAsset::UIngredientDataAsset()
@@ -62,102 +70,206 @@ UPreparedIngredientDataAsset::UPreparedIngredientDataAsset()
 
 UGameDataAsset* UGameDataAsset::CreateDataAsset(const FString& InAssetName, const FString& InAssetPath, TSubclassOf<UGameDataAsset> InGameDataClass)
 {
-    // Get the Asset Tools module
-    UE_LOG(LogTemp, Log, TEXT("Starting CreateDataAsset for %s in path %s"), *InAssetName, *InAssetPath);
+	// Get the Asset Tools module
+	UE_LOG(LogTemp, Log, TEXT("Starting CreateDataAsset for %s in path %s"), *InAssetName, *InAssetPath);
 
-    FAssetToolsModule& AssetToolsModule = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools");
-    IAssetTools& AssetTools = AssetToolsModule.Get();
+	FAssetToolsModule& AssetToolsModule = FModuleManager::GetModuleChecked<FAssetToolsModule>("AssetTools");
+	IAssetTools& AssetTools = AssetToolsModule.Get();
 
-    FString AssetNameSanitised = FormatDisplayNameToFileName(FName(InAssetName)).ToString();
-    FString PackageName = InAssetPath + "/" + AssetNameSanitised;
+	FString AssetNameSanitised = FormatDisplayNameToFileName(FName(InAssetName)).ToString();
+	FString PackageName = InAssetPath + "/" + AssetNameSanitised;
 
-    UE_LOG(LogTemp, Log, TEXT("Sanitized Asset Name: %s, Package Name: %s"), *AssetNameSanitised, *PackageName);
+	UE_LOG(LogTemp, Log, TEXT("Sanitized Asset Name: %s, Package Name: %s"), *AssetNameSanitised, *PackageName);
 
-    // Create a new Data Asset package
-    UPackage* Package = CreatePackage(*PackageName);
-    if (!Package)
-    {
-        UE_LOG(LogTemp, Error, TEXT("Failed to create package for %s"), *AssetNameSanitised);
-        return nullptr;
-    }
-    else
-    {
-        UE_LOG(LogTemp, Log, TEXT("Package created successfully for %s"), *AssetNameSanitised);
-    }
+	// Create a new Data Asset package
+	UPackage* Package = CreatePackage(*PackageName);
+	if (!Package)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to create package for %s"), *AssetNameSanitised);
+		return nullptr;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Package created successfully for %s"), *AssetNameSanitised);
+	}
 
-    // Create the Data Asset
-    UGameDataAsset* NewDataAsset = NewObject<UGameDataAsset>(Package, InGameDataClass, FName(*AssetNameSanitised), RF_Public | RF_Standalone);
-    if (!NewDataAsset)
-    {
-        UE_LOG(LogTemp, Error, TEXT("Failed to create data asset %s"), *AssetNameSanitised);
-        return nullptr;
-    }
-    else
-    {
-        UE_LOG(LogTemp, Log, TEXT("Data Asset created successfully: %s"), *AssetNameSanitised);
-    }
+	// Create the Data Asset
+	UGameDataAsset* NewDataAsset = NewObject<UGameDataAsset>(Package, InGameDataClass, FName(*AssetNameSanitised), RF_Public | RF_Standalone);
+	if (!NewDataAsset)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to create data asset %s"), *AssetNameSanitised);
+		return nullptr;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Data Asset created successfully: %s"), *AssetNameSanitised);
+	}
 
-    // Mark the package as dirty so it gets saved
-    Package->MarkPackageDirty();
-    UE_LOG(LogTemp, Log, TEXT("Package marked dirty for %s"), *AssetNameSanitised);
+	// Mark the package as dirty so it gets saved
+	Package->MarkPackageDirty();
+	UE_LOG(LogTemp, Log, TEXT("Package marked dirty for %s"), *AssetNameSanitised);
 
-    // Save the package using FSavePackageArgs
-    FString PackageFileName = FPackageName::LongPackageNameToFilename(PackageName, FPackageName::GetAssetPackageExtension());
-    UE_LOG(LogTemp, Log, TEXT("Package file name: %s"), *PackageFileName);
+	// Save the package using FSavePackageArgs
+	FString PackageFileName = FPackageName::LongPackageNameToFilename(PackageName, FPackageName::GetAssetPackageExtension());
+	UE_LOG(LogTemp, Log, TEXT("Package file name: %s"), *PackageFileName);
 
-    FSavePackageArgs SaveArgs;
-    SaveArgs.TopLevelFlags = EObjectFlags::RF_Public | EObjectFlags::RF_Standalone;
-    SaveArgs.Error = GError;
-    SaveArgs.bForceByteSwapping = false;
-    SaveArgs.bWarnOfLongFilename = true;
-    SaveArgs.bSlowTask = true;
+	FSavePackageArgs SaveArgs;
+	SaveArgs.TopLevelFlags = EObjectFlags::RF_Public | EObjectFlags::RF_Standalone;
+	SaveArgs.Error = GError;
+	SaveArgs.bForceByteSwapping = false;
+	SaveArgs.bWarnOfLongFilename = true;
+	SaveArgs.bSlowTask = true;
 
-    UE_LOG(LogTemp, Log, TEXT("Starting package save for %s"), *PackageFileName);
-    FSavePackageResultStruct SaveResult = UPackage::Save(Package, NewDataAsset, *PackageFileName, SaveArgs);
+	Package->FullyLoad();
 
-    if (!SaveResult.IsSuccessful())
-    {
-        UE_LOG(LogTemp, Error, TEXT("Failed to save package %s"), *PackageFileName);
-        return nullptr;
-    }
-    else
-    {
-        UE_LOG(LogTemp, Log, TEXT("Package saved successfully: %s"), *PackageFileName);
-    }
+	UE_LOG(LogTemp, Log, TEXT("Starting package save for %s"), *PackageFileName);
+	FSavePackageResultStruct SaveResult = UPackage::Save(Package, NewDataAsset, *PackageFileName, SaveArgs);
 
-    // Notify the editor about the new asset
-    FAssetRegistryModule::AssetCreated(NewDataAsset);
-    UE_LOG(LogTemp, Log, TEXT("Asset registered: %s"), *AssetNameSanitised);
+	if (!SaveResult.IsSuccessful())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to save package %s"), *PackageFileName);
+		return nullptr;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Package saved successfully: %s"), *PackageFileName);
+	}
 
-    // Set additional properties if needed
-    NewDataAsset->DisplayName = FName(InAssetName);
-    NewDataAsset->UpdateFileName();
-    UE_LOG(LogTemp, Log, TEXT("Asset properties updated: %s"), *AssetNameSanitised);
+	// Notify the editor about the new asset
+	FAssetRegistryModule::AssetCreated(NewDataAsset);
+	UE_LOG(LogTemp, Log, TEXT("Asset registered: %s"), *AssetNameSanitised);
 
-    return NewDataAsset;
+	// Set additional properties if needed
+	NewDataAsset->DisplayName = FName(InAssetName);
+	NewDataAsset->UpdateFileName();
+	UE_LOG(LogTemp, Log, TEXT("Asset properties updated: %s"), *AssetNameSanitised);
+
+	return NewDataAsset;
 }
 
 // Create prepared variants
 void UIngredientDataAsset::CreatePreparedIngredientDataAssets()
 {
-    // Add new variants
-    for (auto& current_pair : PreparedIngredientDataAssets)
-    {
-        if (current_pair.Value.PreparedIngredientDataAsset)
-            continue;
+	// Add new variants
+	for (auto& current_pair : PreparedIngredientDataAssets)
+	{
+		if (current_pair.Value)
+			continue;
 
-        current_pair.Value.PreparedIngredientDataAsset = CreateDataAsset(DisplayName.ToString() + " " + FActorCategory::EnumToString(current_pair.Key), FString("/Game/Data/Food/PreparedIngredients"), UPreparedIngredientDataAsset::StaticClass());
-    }
+		UGameDataAsset* created_asset = CreateDataAsset(DisplayName.ToString() + " " + FActorCategory::EnumToString(current_pair.Key), FString("/Game/Data/Food/PreparedIngredients"), UPreparedIngredientDataAsset::StaticClass());
+		current_pair.Value = Cast<UPreparedIngredientDataAsset>(created_asset);
+	}
 }
 
 void UPreparedIngredientDataAsset::CreateCookedIngredientDataAssets()
 {
-    // Add new variants
-    for (auto& current_pair : CookedIngredientDataAssets)
-    {
-        if (current_pair.Value.CookedIngredientDataAsset)
-            continue;
+	// Add new variants
+	for (auto& current_pair : CookedIngredientDataAssets)
+	{
+		if (current_pair.Value)
+			continue;
+		UGameDataAsset* created_asset = CreateDataAsset(DisplayName.ToString() + " " + FActorCategory::EnumToString(current_pair.Key), FString("/Game/Data/Food/CookedIngredients"), UCookedIngredientDataAsset::StaticClass());
+		current_pair.Value = Cast< UCookedIngredientDataAsset>(created_asset);
+	}
+}
 
-        current_pair.Value.CookedIngredientDataAsset = CreateDataAsset(DisplayName.ToString() + " " + FActorCategory::EnumToString(current_pair.Key), FString("/Game/Data/Food/CookedIngredients"), UCookedIngredientDataAsset::StaticClass());
-    }
+
+UMealDataAsset::UMealDataAsset()
+{
+
+}
+
+UServingDataAsset::UServingDataAsset()
+{
+
+}
+
+UCookedIngredientDataAsset::UCookedIngredientDataAsset()
+{
+
+}
+
+UFoodDataAsset::UFoodDataAsset()
+{
+
+}
+
+URestaurantDataAsset::URestaurantDataAsset()
+{
+
+}
+
+UKitchenDataAsset::UKitchenDataAsset()
+{
+
+}
+
+UDeliveryDataAsset::UDeliveryDataAsset()
+{
+
+}
+
+UDecorationDataAsset::UDecorationDataAsset()
+{
+
+}
+
+UArchitectureDataAsset::UArchitectureDataAsset()
+{
+
+}
+
+UEditorModeDataAsset::UEditorModeDataAsset()
+{
+}
+
+void UEditorModeDataAsset::CreateEditorModeActorsMap()
+{
+	for (TSubclassOf<AInteractableActorBase> actor_class : EditorModeBPActors)
+	{
+		if (!actor_class)
+		{
+			continue;
+		}
+
+		// Access the class default object (CDO)
+		AInteractableActorBase* default_actor = actor_class->GetDefaultObject<AInteractableActorBase>();
+
+		if (!default_actor)
+			continue;
+
+		const FString& actor_category = default_actor->GetActorCategory().GetFullCategory();
+		
+		// Add the actor class to the map under its category
+		FEditorModeActors& spawnable_actors = EditorModeActorsMap.FindOrAdd(actor_category);
+		if(spawnable_actors.MappedClasses.Find(actor_class->GetName()))
+			continue;
+
+		spawnable_actors.MappedClasses.Add(actor_class->GetName(), FEditorModeActorBase(actor_class));
+	}
+
+	EditorModeActorsMap.KeySort([](const FActorCategory& A, const FActorCategory& B)
+		{
+			if (A.GetMainCategory() < B.GetMainCategory())
+				return true;
+
+			if (A.GetMainCategory() > B.GetMainCategory())
+				return false;
+
+			if (A.GetSubCategory() < B.GetSubCategory())
+				return true;
+
+			if (A.GetSubCategory() > B.GetSubCategory())
+				return false;
+			return false;
+		});
+}
+
+FEditorModeActorBase::FEditorModeActorBase()
+{
+}
+
+FEditorModeActorBase::FEditorModeActorBase(TSubclassOf<class AInteractableActorBase> InActorSpawnClass)
+{
+	ActorSpawnClass = InActorSpawnClass;
 }
