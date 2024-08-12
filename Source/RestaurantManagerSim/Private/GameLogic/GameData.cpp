@@ -52,48 +52,23 @@ FName UGameDataAsset::FormatDisplayNameToFileName(FName InDisplayName)
 
 UIngredientDataAsset::UIngredientDataAsset()
 {
-	// Initialize IngredientPrepMethods with default values
-	IngredientPrepMethods =
-	{
-		{EFoodPrepMethods::Cutting, false},
-		{EFoodPrepMethods::Slicing, false},
-		{EFoodPrepMethods::Grating, false},
-		{EFoodPrepMethods::Blending, false},
-		{EFoodPrepMethods::Marinating, false}
-	};
+
 }
 
 UPreparedIngredientDataAsset::UPreparedIngredientDataAsset()
 {
-	CookingMethods =
-	{
-		{ECookingMethods::Fried, false},
-		{ECookingMethods::Boiled, false},
-		{ECookingMethods::Baked, false},
-		{ECookingMethods::Grilled, false},
-		{ECookingMethods::Steamed, false}
-	};
+
 }
 
 template<typename EnumType>
-void UFoodDataAsset::CreateGameDataMaps(TMap<EnumType, bool>& EnumMap, TMap<EnumType, UGameDataAsset*>& CreatedDataMap, TSubclassOf<UGameDataAsset> InGameDataClass, const FString& InPath)
+void UFoodDataAsset::CreateGameDataMaps(const TArray<EnumType>& InEnums, TMap<EnumType, UGameDataAsset*>& CreatedDataMap, TSubclassOf<UGameDataAsset> InGameDataClass, const FString& InPath)
 {
 	static_assert(TIsEnum<EnumType>::Value, "Only enum types are allowed");
-
-	// Remove obsolete variants
-	TSet<EnumType> current_prep_methods;
-	for (const auto& enum_pair : EnumMap)
-	{
-		if (enum_pair.Value)
-		{
-			current_prep_methods.Add(enum_pair.Key);
-		}
-	}
 
 	TArray<EnumType> assets_to_remove;
 	for (const auto& prepared_variant_pair : CreatedDataMap)
 	{
-		if (!current_prep_methods.Contains(prepared_variant_pair.Key))
+		if (!InEnums.Contains(prepared_variant_pair.Key))
 		{
 			assets_to_remove.Add(prepared_variant_pair.Key);
 		}
@@ -107,20 +82,17 @@ void UFoodDataAsset::CreateGameDataMaps(TMap<EnumType, bool>& EnumMap, TMap<Enum
 			// Remove the asset from disk
 			FString asset_path = asset_to_remove->GetPathName();
 			UEditorAssetLibrary::DeleteAsset(asset_path); // Correct method for deleting assets
-			CreatedDataMap.Remove(key);
-		}
+		}			
+		CreatedDataMap.Remove(key);
 	}
 
 	// Add new variants
-	for (const auto& enum_pair : EnumMap)
+	for (const auto& current_enum : InEnums)
 	{
-		if (!enum_pair.Value)
-			continue;
+		if (CreatedDataMap.Contains(current_enum))
+			continue;		
 
-		if (CreatedDataMap.Contains(enum_pair.Key))
-			continue;
-
-		CreatedDataMap.Add(enum_pair.Key, CreateDataAsset(DisplayName.ToString() + " " + FActorCategory::EnumToString(enum_pair.Key), InPath, InGameDataClass));
+		CreatedDataMap.Add(current_enum, CreateDataAsset(DisplayName.ToString() + " " + FActorCategory::EnumToString(current_enum), InPath, InGameDataClass));
 	}
 }
 

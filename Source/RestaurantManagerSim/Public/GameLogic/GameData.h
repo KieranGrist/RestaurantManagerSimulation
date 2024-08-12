@@ -89,32 +89,35 @@ enum class ERestaurantSubCategory : uint8
 UENUM(BlueprintType)
 enum class EIngredientState : uint8
 {
+	Error,
 	Liquid,
 	Gas,
-	Solid
+	Solid,
+	Rotten
 };
 
 // Food preparation methods
 UENUM(BlueprintType)
 enum class EFoodPrepMethods : uint8
 {
-	Cutting UMETA(DisplayName = "Cutting"),        // Combines Dicing, Chopping, Mincing
-	Slicing UMETA(DisplayName = "Slicing"),        // Combines Slicing and Peeling
-	Grating UMETA(DisplayName = "Grating"),        // Combines Grating and Shredding
-	Blending UMETA(DisplayName = "Blending"),      // Combines Blending, Mixing, Whisking, Pureeing
-	Marinating UMETA(DisplayName = "Marinating")   // Includes Marinating and Tenderizing
+	Whole UMETA(DisplayName = "Whole"),        // Using The whole Ingredient
+	Knife UMETA(DisplayName = "Knife"),        //  Slicing, Cutting, Dicing, Chopping. Anything you could use a knife for
+	Grate UMETA(DisplayName = "Grate"),        // Combines Grating and Shredding, Peeling
+	Blender UMETA(DisplayName = "Blending"),      // Combines Blending, Mixing, Whisking, Pureeing
+	Curer UMETA(DisplayName = "Curer")       // Includes Marinating, Tenderizing, Aging, Smoking.
 };
 
 // Cooking methods
 UENUM(BlueprintType)
 enum class ECookingMethods : uint8
 {
-	Fried UMETA(DisplayName = "Fried"),
-	Boiled UMETA(DisplayName = "Boiled"),
-	Baked UMETA(DisplayName = "Baked"),
-	Grilled UMETA(DisplayName = "Grilled"),
-	Steamed UMETA(DisplayName = "Steamed")       // Includes Steamed, Roasted, and Poached
+	Oven UMETA(DisplayName = "Oven"),          // Includes Baking and Roasting, for dry heat cooking methods.
+	Fryer UMETA(DisplayName = "Fryer"),        // For frying methods, including deep-frying, pan-frying.
+	Grill UMETA(DisplayName = "Grill"),        // For grilling, BBQ, and similar high-heat cooking methods.
+	Steamer UMETA(DisplayName = "Steamer"),    // Includes Steaming, Poaching, and any water-based cooking.
+	Pan UMETA(DisplayName = "Pan")             // Includes Boiling, Blanching, Sauteing, and similar stovetop methods.
 };
+
 
 USTRUCT(BlueprintType)
 struct FActorCategory
@@ -246,13 +249,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
 	FName DisplayName;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
 	FName FileName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
 	UTexture2D* UITexture;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
 	UMaterial* MeshMaterial;
 
@@ -301,10 +304,10 @@ class RESTAURANTMANAGERSIM_API UFoodDataAsset : public UGameDataAsset
 
 public:
 	template<typename EnumType>
-	void CreateGameDataMaps(TMap<EnumType, bool>& EnumMap, TMap<EnumType, UGameDataAsset*>& CreatedDataMap, TSubclassOf<UGameDataAsset> GameDataClass, const FString& InPath);
+	void CreateGameDataMaps(const TArray<EnumType>& EnumMap, TMap<EnumType, UGameDataAsset*>& CreatedDataMap, TSubclassOf<UGameDataAsset> GameDataClass, const FString& InPath);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodData)
-	FDateTime CreationTime;
+	FDateTime CreationTime = FDateTime::UtcNow();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodData)
 	float Quality;
@@ -325,18 +328,18 @@ public:
 #endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
-	TMap<EFoodPrepMethods, bool> IngredientPrepMethods;
+	TArray<EFoodPrepMethods> IngredientPrepMethods;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
 	TMap<EFoodPrepMethods, UGameDataAsset*> PreparedIngredientDataAssets;
-	
+
 	// Seconds it takes to prepare this 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
 	float PrepTime = 50;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
 	EIngredientState IngredientState;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
 	float MiniumStorageTemperature = 0;
 
@@ -358,7 +361,7 @@ public:
 #endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
-	TMap<ECookingMethods, bool> CookingMethods;
+	TArray<ECookingMethods> CookingMethods;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
 	TMap<ECookingMethods, UGameDataAsset*> CookedIngredientDataAssets;
@@ -386,10 +389,19 @@ public:
 	UIngredientDataAsset* StartingIngredient;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
+	int32 StartingIngredientNeeded = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
 	UPreparedIngredientDataAsset* PreparedIngredient;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
+	int32 PreparedIngredientNeeded = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
 	UCookedIngredientDataAsset* CookedIngredient;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
+	int32 CookedIngredientNeeded = 1;
 };
 
 UCLASS(BlueprintType)
@@ -416,6 +428,29 @@ public:
 	TArray<UServingDataAsset*> ServingMethods;
 };
 
+
+USTRUCT(BlueprintType)
+struct FMeal
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
+	float MinPopularity = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
+	float MaxPopularity = 100;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
+	float RecipeCost = 15;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
+	bool Unlocked = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
+	UMealDataAsset* MealData;
+};
+
 // Game data class for managing player's money and other game-specific data
 UCLASS(BlueprintType)
 class RESTAURANTMANAGERSIM_API UGameData : public UObject
@@ -428,6 +463,9 @@ public:
 	const float& GetCurrentMoney() const;
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Money")
+	TArray<FMeal> Meals;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Money")
 	FString CurrencySymbol;
 
