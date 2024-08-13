@@ -528,12 +528,12 @@ public:
 
 // Game data class for managing player's money and other game-specific data
 UCLASS(BlueprintType)
-class RESTAURANTMANAGERSIM_API UGameData : public UObject
+class RESTAURANTMANAGERSIM_API UPlayerData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 
 public:
-	UGameData();
+	UPlayerData();
 
 	void AddMoney(float InAddend);
 
