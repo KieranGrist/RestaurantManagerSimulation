@@ -140,33 +140,25 @@ public:
 	static FString GetMainCategory(const FString& InFullCategory)
 	{
 		FString Symbol = "::";
-		int32 SymbolIndex;
+		int32 SymbolIndex = InFullCategory.Find(Symbol, ESearchCase::IgnoreCase, ESearchDir::FromStart);
 
 		// Find the position of the symbol in the string
-		if (InFullCategory.Find(Symbol, ESearchCase::IgnoreCase, ESearchDir::FromStart, SymbolIndex))
-		{
-			// Get the left part of the string before the symbol
-			return InFullCategory.Left(SymbolIndex);
-		}
-
-		// If the symbol is not found, return the full string as the main category
-		return InFullCategory;
+		if (SymbolIndex == INDEX_NONE)
+			return FString();
+		// Get the left part of the string before the symbol
+		return InFullCategory.Left(SymbolIndex);
 	}
 
 	static FString GetSubCategory(const FString& InFullCategory)
 	{
 		FString Symbol = "::";
-		int32 SymbolIndex;
+		int32 SymbolIndex = InFullCategory.Find(Symbol, ESearchCase::IgnoreCase, ESearchDir::FromStart);
 
 		// Find the position of the symbol in the string
-		if (InFullCategory.Find(Symbol, ESearchCase::IgnoreCase, ESearchDir::FromStart, SymbolIndex))
-		{
-			// Get the right part of the string after the symbol
-			return InFullCategory.RightChop(SymbolIndex + Symbol.Len());
-		}
-
-		// If the symbol is not found, return an empty string or the full string
-		return FString();
+		if (SymbolIndex == INDEX_NONE)
+			return FString();
+		// Get the left part of the string before the symbol
+		return InFullCategory.Right(SymbolIndex + 1);
 	}
 
 	// Returns the full category string
@@ -301,7 +293,7 @@ public:
 	UStaticMesh* Mesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
-	float Cost;
+	float Cost = INDEX_NONE;
 };
 
 UCLASS(BlueprintType)
@@ -517,7 +509,7 @@ public:
 
 
 UCLASS(BlueprintType)
-class RESTAURANTMANAGERSIM_API UEditorModeDataAsset : public UGameDataAsset
+class RESTAURANTMANAGERSIM_API UEditorModeDataAsset : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 

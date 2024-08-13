@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Actors/InteractableActorBase.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameLogic/GridManager.h"
@@ -20,7 +20,7 @@ enum class EGridSquareDirection : uint8
 class AInteractableActorBase;
 
 UCLASS()
-class RESTAURANTMANAGERSIM_API AGridSquare : public AActor
+class RESTAURANTMANAGERSIM_API AGridSquare : public AInteractableActorBase
 {
 	GENERATED_BODY()
 

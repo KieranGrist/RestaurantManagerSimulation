@@ -13,7 +13,7 @@ AInteractableActorBase::AInteractableActorBase()
 	ActorData = CreateDefaultSubobject<UGameDataAsset>(TEXT("ActorData"));
 
 	// Create and configure the GridSquareMesh component
-	ActorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("GridSquareMesh"));
+	ActorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ActorMesh"));
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	ActorMesh->SetupAttachment(RootComponent);
 

@@ -41,7 +41,6 @@ AGridSquare::AGridSquare()
 
 	EditModeSnapOffset->SetRelativeLocation(FVector(0, 0, 50));
 	ActorSnapOffset->SetRelativeLocation(FVector(0, 0, 100));
-
 }
 
 

@@ -248,18 +248,23 @@ void UEditorModeDataAsset::CreateEditorModeActorsMap()
 		spawnable_actors.MappedClasses.Add(actor_class->GetName(), FEditorModeActorBase(actor_class));
 	}
 
-	EditorModeActorsMap.KeySort([](const FActorCategory& A, const FActorCategory& B)
+	EditorModeActorsMap.KeySort([](const FString& A, const FString& B)
 		{
-			if (A.GetMainCategory() < B.GetMainCategory())
+			FString main_category_a = FActorCategory::GetMainCategory(A);
+			FString main_category_b = FActorCategory::GetMainCategory(B);
+			FString sub_category_a = FActorCategory::GetSubCategory(A);
+			FString sub_category_b = FActorCategory::GetSubCategory(B);
+
+			if (main_category_a < main_category_b)
 				return true;
 
-			if (A.GetMainCategory() > B.GetMainCategory())
+			if (main_category_a > main_category_b)
 				return false;
 
-			if (A.GetSubCategory() < B.GetSubCategory())
+			if (sub_category_a < sub_category_b)
 				return true;
 
-			if (A.GetSubCategory() > B.GetSubCategory())
+			if (sub_category_a > sub_category_b)
 				return false;
 			return false;
 		});
