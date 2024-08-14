@@ -17,7 +17,14 @@ public:
 #if WITH_EDITOR
 	UFUNCTION(CallInEditor, Category = PreparedIngredientData)
 	void CreateCookedIngredientDataAssets();
+	
+	virtual void UpdateFileName() override; 
 #endif
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
+	class UIngredientDataAsset* ParentIngredientDataAsset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
+	EFoodPrepMethods PrepMethod;
 
 	// Float Represents cooking Time;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
@@ -26,9 +33,6 @@ public:
 	// Seconds it takes to prepare this 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
 	float PrepTime = 50;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
-	EIngredientState IngredientState;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
 	float MiniumStorageTemperature = 0;

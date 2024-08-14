@@ -15,10 +15,19 @@ class RESTAURANTMANAGERSIM_API UFoodDataAsset : public UGameDataAsset
 public:
 	UFoodDataAsset();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodData)
+#if WITH_EDITOR
+	static FName GetDisplayName(const FString& InEnumString, const FString& InDisplayName);
+#endif
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodDataAsset)
+	EIngredientState IngredientState;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodDataAsset)
+	EFoodPrepMethods FoodPrep;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodDataAsset)
 	FDateTime CreationTime = FDateTime::UtcNow();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodData)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FoodDataAsset)
 	float Quality;
 
 };

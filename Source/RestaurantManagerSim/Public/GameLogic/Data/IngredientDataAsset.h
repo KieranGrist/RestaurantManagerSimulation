@@ -18,8 +18,12 @@ public:
 #if WITH_EDITOR
 	UFUNCTION(CallInEditor, Category = IngredientData)
 	void CreatePreparedIngredientDataAssets();
+
+	virtual void UpdateFileName() override;
 #endif
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = IngredientData)
 	TMap<EFoodPrepMethods, class UPreparedIngredientDataAsset*> PreparedIngredientDataAssets;
+
+	
 };

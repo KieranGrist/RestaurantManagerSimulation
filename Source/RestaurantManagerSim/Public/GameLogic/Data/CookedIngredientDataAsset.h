@@ -15,16 +15,24 @@ class RESTAURANTMANAGERSIM_API UCookedIngredientDataAsset : public UFoodDataAsse
 public:
 	UCookedIngredientDataAsset();
 
+#if WITH_EDITOR
+	virtual void UpdateFileName();
+#endif
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PreparedIngredientData)
+	class UPreparedIngredientDataAsset* ParentPreparedIngredientDataAsset;
+
 	// Seconds it takes to prepare this 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
 	float CookTime = 50;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
-	EIngredientState IngredientState;
-
+	ECookingMethods  CookingMethod;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
 	float MiniumStorageTemperature = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
 	float MaxiumStorageTemperature = 10;
+
 };

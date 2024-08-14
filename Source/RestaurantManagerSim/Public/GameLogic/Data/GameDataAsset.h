@@ -99,10 +99,10 @@ UENUM(BlueprintType)
 enum class EFoodPrepMethods : uint8
 {
 	Whole UMETA(DisplayName = "Whole", ToolTip = "Using the whole ingredient"),
-	Knife UMETA(DisplayName = "Knife", ToolTip = "Slicing, Cutting, Dicing, Chopping. Anything you could use a knife for"),
-	Grate UMETA(DisplayName = "Grate", ToolTip = "Combines Grating and Shredding, Peeling"),
-	Blender UMETA(DisplayName = "Blending", ToolTip = "Combines Blending, Mixing, Whisking, Pureeing"),
-	Curer UMETA(DisplayName = "Curer", ToolTip = "Includes Marinating, Tenderizing, Aging, Smoking")
+	Cut UMETA(DisplayName = "Knife", ToolTip = "Slicing, Cutting, Dicing, Chopping. Anything you could use a knife for"),
+	Grated UMETA(DisplayName = "Grate", ToolTip = "Combines Grating and Shredding, Peeling"),
+	Blended UMETA(DisplayName = "Blending", ToolTip = "Combines Blending, Mixing, Whisking, Pureeing"),
+	Cured UMETA(DisplayName = "Curer", ToolTip = "Includes Marinating, Tenderizing, Aging, Smoking")
 };
 
 // Cooking methods
@@ -110,11 +110,11 @@ UENUM(BlueprintType)
 enum class ECookingMethods : uint8
 {
 	Raw UMETA(DisplayName = "Raw", ToolTip = "Raw ingredient (does not need cooking, e.g., salad)"),
-	Oven UMETA(DisplayName = "Oven", ToolTip = "Includes baking and roasting, for dry heat cooking methods"),
-	Fryer UMETA(DisplayName = "Fryer", ToolTip = "For frying methods, including deep-frying, pan-frying"),
-	Grill UMETA(DisplayName = "Grill", ToolTip = "For grilling, BBQ, and similar high-heat cooking methods"),
-	Steamer UMETA(DisplayName = "Steamer", ToolTip = "Includes steaming, poaching, and any water-based cooking"),
-	Pan UMETA(DisplayName = "Pan", ToolTip = "Includes boiling, blanching, sauteing, and similar stovetop methods")
+	Cooked UMETA(DisplayName = "Oven", ToolTip = "Includes baking and roasting, for dry heat cooking methods"),
+	Fried UMETA(DisplayName = "Fryer", ToolTip = "For frying methods, including deep-frying, pan-frying"),
+	Grilled UMETA(DisplayName = "Grill", ToolTip = "For grilling, BBQ, and similar high-heat cooking methods"),
+	Steamed UMETA(DisplayName = "Steamer", ToolTip = "Includes steaming, poaching, and any water-based cooking"),
+	Paned UMETA(DisplayName = "Pan", ToolTip = "Includes boiling, blanching, sauteing, and similar stovetop methods")
 };
 
 // Struct to manage a stage of making a meal e.g. Chicken and chips, would have Cooking Chicken, Cooking Chips
@@ -320,29 +320,34 @@ public:
 #if WITH_EDITOR
 	// Override PostEditChangeProperty
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-
-	void UpdateFileName();
+	
+	UFUNCTION(CallInEditor, Category = GameDataAsset)
+	virtual void UpdateFileName();
 
 	static FName FormatDisplayNameToFileName(FName InDisplayName);
 
 	UGameDataAsset* CreateDataAsset(const FString& AssetName, const FString& AssetPath, TSubclassOf<UGameDataAsset> GameDataClass);
+
+	void FixRedirectorsInFolder(const FString& FolderPath);
+
+	FString GetAssetFilePath();
 #endif
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameDataAsset)
 	FName DisplayName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameDataAsset)
 	FName FileName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameDataAsset)
 	UTexture2D* UITexture;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameDataAsset)
 	UMaterial* MeshMaterial;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameDataAsset)
 	UStaticMesh* Mesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameData)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = GameDataAsset)
 	float Cost = INDEX_NONE;
 };
