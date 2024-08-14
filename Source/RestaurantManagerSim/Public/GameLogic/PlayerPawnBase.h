@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "GameLogic/GameData.h"
+#include "GameLogic/Data/EditorModeDataAsset.h"
+#include "GameLogic/Data/PlayerDataAsset.h"
 #include "PlayerPawnBase.generated.h"
 
 UCLASS()
@@ -29,4 +30,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorMode)
 	UEditorModeDataAsset* EditorModeData;
+	
+	UPlayerDataAsset* PlayerDataAsset;
 };

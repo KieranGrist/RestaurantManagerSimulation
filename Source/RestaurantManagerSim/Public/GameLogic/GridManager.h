@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "GameLogic/GameData.h"
+#include "GameLogic/Data/GameDataAsset.h"
 #include "GridManager.generated.h"
 
 class AGridSquare;
