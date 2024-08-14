@@ -119,6 +119,57 @@ enum class ECookingMethods : uint8
 	Pan UMETA(DisplayName = "Pan", ToolTip = "Includes boiling, blanching, sauteing, and similar stovetop methods")
 };
 
+// Struct to manage a stage of making a meal e.g. Chicken and chips, would have Cooking Chicken, Cooking Chips
+USTRUCT(BlueprintType)
+struct FMealStage
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
+	UIngredientDataAsset* StartingIngredient;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
+	int32 StartingIngredientNeeded = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
+	UPreparedIngredientDataAsset* PreparedIngredient;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
+	int32 PreparedIngredientNeeded = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
+	UCookedIngredientDataAsset* CookedIngredient;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
+	int32 CookedIngredientNeeded = 1;
+};
+
+USTRUCT(BlueprintType)
+struct FMeal
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
+	float MinPopularity = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
+	float CurrentPopularity = 100;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
+	float MaxPopularity = 100;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
+	float RecipeCost = 15;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
+	bool Unlocked = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
+	UMealDataAsset* MealData;
+};
+
 USTRUCT(BlueprintType)
 struct FActorCategory
 {
@@ -428,32 +479,6 @@ public:
 	float MaxiumStorageTemperature = 10;
 };
 
-// Struct to manage a stage of making a meal e.g. Chicken and chips, would have Cooking Chicken, Cooking Chips
-USTRUCT(BlueprintType)
-struct FMealStage
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
-	UIngredientDataAsset* StartingIngredient;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
-	int32 StartingIngredientNeeded = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
-	UPreparedIngredientDataAsset* PreparedIngredient;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
-	int32 PreparedIngredientNeeded = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
-	UCookedIngredientDataAsset* CookedIngredient;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CookedIngredientData)
-	int32 CookedIngredientNeeded = 1;
-};
-
 UCLASS(BlueprintType)
 class RESTAURANTMANAGERSIM_API UServingDataAsset : public UFoodDataAsset
 {
@@ -465,7 +490,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = ServingData)
 	TSubclassOf<class AServingBase> ServingMethod;
 };
-
 
 UCLASS(BlueprintType)
 class RESTAURANTMANAGERSIM_API UMealDataAsset : public UFoodDataAsset
@@ -481,32 +505,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MealData)
 	TArray<UServingDataAsset*> ServingMethods;
 };
-
-USTRUCT(BlueprintType)
-struct FMeal
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
-	float MinPopularity = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
-	float CurrentPopularity = 100;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
-	float MaxPopularity = 100;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
-	float RecipeCost = 15;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
-	bool Unlocked = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Meal)
-	UMealDataAsset* MealData;
-};
-
 
 UCLASS(BlueprintType)
 class RESTAURANTMANAGERSIM_API UEditorModeDataAsset : public UPrimaryDataAsset
@@ -540,7 +538,7 @@ public:
 	const float& GetCurrentMoney() const;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Money")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meal")
 	TArray<FMeal> Meals;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Money")

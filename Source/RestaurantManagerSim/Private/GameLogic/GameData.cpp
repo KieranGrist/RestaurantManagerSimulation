@@ -10,16 +10,16 @@
 #include "UObject/SavePackage.h"
 #include "Actors/InteractableActorBase.h"
 
-UGameData::UGameData()
+UPlayerData::UPlayerData()
 {
 }
 
-void UGameData::AddMoney(float InAddend)
+void UPlayerData::AddMoney(float InAddend)
 {
 	PlayersMoney += InAddend;
 }
 
-const float& UGameData::GetCurrentMoney() const
+const float& UPlayerData::GetCurrentMoney() const
 {
 	return PlayersMoney;
 }
