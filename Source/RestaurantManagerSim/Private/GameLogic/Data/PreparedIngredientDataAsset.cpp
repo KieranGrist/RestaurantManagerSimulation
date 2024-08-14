@@ -14,7 +14,7 @@ void UPreparedIngredientDataAsset::CreateCookedIngredientDataAssets()
 	{
 		if (current_pair.Value)
 			continue;
-		UGameDataAsset* created_asset = CreateDataAsset(DisplayName.ToString() + " " + FActorCategory::EnumToString(current_pair.Key), FString("/Game/Data/Food/CookedIngredients"), UCookedIngredientDataAsset::StaticClass());
+		UGameDataAsset* created_asset = CreateDataAsset(FActorCategory::EnumToString(current_pair.Key) + " " + DisplayName.ToString(), FString("/Game/Data/Food/CookedIngredients"), UCookedIngredientDataAsset::StaticClass());
 		current_pair.Value = Cast< UCookedIngredientDataAsset>(created_asset);
 	}
 }
