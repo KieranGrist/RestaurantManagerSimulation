@@ -31,5 +31,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = EditorMode)
 	UEditorModeDataAsset* EditorModeData;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = PlayerData)
 	UPlayerDataAsset* PlayerDataAsset;
 };
